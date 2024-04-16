@@ -16,3 +16,6 @@ class CountryMap:
     def get_city_node(self, city_name):
         if city_name in self.graph.keys():
             return self.graph[city_name]
+        
+    def get_neighbors(self, city_name):
+        return self.graph[city_name]
