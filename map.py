@@ -19,3 +19,9 @@ class CountryMap:
         
     def get_neighbors(self, city_name):
         return self.graph[city_name]
+    
+    def strip_va(self, city_name):
+        '''
+        Might not need this because I can strip va- when parsing
+        '''
+        return city_name[3:]
