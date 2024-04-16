@@ -6,7 +6,7 @@ Programming Assignment 1 – Search
 
 Due April 22nd at 11:59pm PST
 
-PROCEDURES AND LATE POLICY REMINDER
+<h1 align="center">PROCEDURES AND LATE POLICY REMINDER</h1>
 
 * Turn-in: Please commit your final working code to GitHub classroom
 (https://classroom.github.com/a/JQF7KaHD) by the deadline.
@@ -29,7 +29,7 @@ actions that an agent can take).
 The map that you will use for this assignment is pictured below and takes the form of a weighted
 graph:<p>
 
-![alt text](image.png)
+<img src="image.png" width=80%>
 
 Your agent must use multiple different types of search:
 1. Breadth-first search (bfs)
