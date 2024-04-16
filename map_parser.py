@@ -52,7 +52,7 @@ class MapParser:
 
             # Pairing every second item on the list.
             for j in range(0, len(splits), 2):
-                cities_with_weights[i].append((splits[j], splits[j+1]))  
+                cities_with_weights[i].append((splits[j][3:], splits[j+1]))  
 
         return cities_with_weights
     
