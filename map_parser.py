@@ -52,7 +52,7 @@ class MapParser:
 
             # Pairing every second item on the list.
             for j in range(0, len(splits), 2):
-                cities_with_weights[i].append((splits[j], splits[j+1]))  
+                cities_with_weights[i].append((splits[j+1], splits[j]))  
 
         return cities_with_weights
     
@@ -76,19 +76,15 @@ class MapParser:
         cities, dmss = self.city_from_dms(split_lines_vertex)
         go_cities_with_weights = self.split_go_city_from_weight(split_lines_edges)
         coordinates = self.split_dms(dmss)
-
-        for i in coordinates:
-            print(f"i[0]: {i[0]}\ni[1]: {i[1]}\n\n-----------------------------------\n")
-
-        for i in range(len(cities)):
-            print(f"City: {cities[i]}\nGo cities with weights: {go_cities_with_weights[i]}\nCoordinates: \n\t{coordinates[i][0]}\n\t{coordinates[i][1]}\n\n-----------------------------------\n")
+        
+        return cities, go_cities_with_weights, coordinates
             
 
-def main():
-    file_path = "./france.txt"
-    mp = MapParser()
-    mp.driver(file_path)
+# def main():
+#     file_path = "./france.txt"
+#     mp = MapParser()
+#     mp.driver(file_path)
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
