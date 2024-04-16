@@ -4,6 +4,7 @@ from city_node_factory import CityNodeFactory
 from map import CountryMap
 from agent import MapAgent
 import argparse
+from queue import SimpleQueue
 
 def arg_parsing():
     parser = argparse.ArgumentParser(description="Process a map file.")
@@ -109,20 +110,33 @@ def main():
     neighbors = cm.get_neighbors("paris")
     # print(neighbors)
 
-    agent = MapAgent()
+    agent = MapAgent("caen", SimpleQueue())
 
-    grenoble = agent.move_cities("paris", "va-caen", cm)
+    print(agent.get_current_city())
 
-    print(grenoble)
+    grenoble = agent.move_cities("paris", cm)
 
-    print(graph)
+    print(agent.get_current_city())
+    # print(grenoble)
 
-    va = "va-paris"
-
-    print(cm.strip_va(va))
+    # dijon = agent.move_cities("dijon", cm)
+    # print(dijon)
+    # print(graph)
 
     # for n in neighbors:
     #     print(f"n: {n}\nneighbors[n]: {neighbors[n]}\n\n\n")
+
+    print(agent.get_reached())
+    front = agent.get_frontier()
+    print(front)
+
+    temp = []
+
+    while not front.empty():
+        temp.append(front.get())
+    print(f"we here-----------------------------------\n\n")
+    for i in temp:
+        print(i)
 
 if __name__ == "__main__":
     main()
