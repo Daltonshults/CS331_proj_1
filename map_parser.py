@@ -52,14 +52,13 @@ class MapParser:
 
             # Pairing every second item on the list.
             for j in range(0, len(splits), 2):
-                cities_with_weights[i].append((splits[j+1], splits[j]))  
+                cities_with_weights[i].append((splits[j], splits[j+1]))  
 
         return cities_with_weights
     
     def split_dms(self, dmss):
         dms_split = []#[[] for i in range(len(dmss) //2)]
         for i in range(len(dmss)):
-            print(f"DMS: {dmss[i]}")
             first_coord = dmss[i][0:4]
             second_coord = dmss[i][4:8]
             dms_split.append((first_coord, second_coord))
