@@ -13,6 +13,7 @@ class BreadthFirstSearch:
         '''
         neighbors = self.map.get_neighbors(current_node.get_state())
         nieghbor_nodes = []
+        print(f"Current Node: {current_node.get_state()}")
         print(f"Neighbors: {neighbors}")
 
         for i in neighbors.keys():
@@ -41,7 +42,7 @@ class BreadthFirstSearch:
         self.frontier.put(node)
 
         # Add node to reached set/list
-        self.reached.append(node)
+        self.reached.append(node.get_state())
 
         # While frontier is not empty
         while not self.frontier.empty():
@@ -51,7 +52,7 @@ class BreadthFirstSearch:
 
             # For each child of the node    
             for i in self.expand(node):
-                print(f"State: {i.get_state()}\nParent: {i.get_parent().get_state()}\nAction: {i.get_action()}\nPath Cost: {i.get_path_cost()}\n\n")
+
                 
 
                 # if node is the goal node return
@@ -59,8 +60,8 @@ class BreadthFirstSearch:
                     return i
 
                 # if node not in reached set add node to reached
-                if i not in self.reached:
-                    self.reached.append(i)
+                if i.get_state() not in self.reached:
+                    self.reached.append(i.get_state())
                     self.frontier.put(i)
 
         return None
