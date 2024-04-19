@@ -1,4 +1,4 @@
-from city_node import City
+from city import City
 
 class CityFactory:
 
