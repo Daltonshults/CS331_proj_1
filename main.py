@@ -2,7 +2,7 @@ from map_parser import MapParser
 from city_factory import CityFactory
 from map import CountryMap
 import argparse
-
+from bfs import BreadthFirstSearch 
 def arg_parsing():
     parser = argparse.ArgumentParser(description="Process a map file.")
 
@@ -60,6 +60,27 @@ def main():
     node_list = cnf.create_city_nodes_from_lists(cities, go_cities_with_weights, coordinates)
     cm = CountryMap(node_list)
     cm.create_graph()
+
+    bfs = BreadthFirstSearch(cm)
+
+    path = bfs.search("nice", "brest")
+
+    current_node = path
+
+    # while current_node.get_parent() != None:
+    #     print(current_node.get_city_name())
+    #     current_node = current_node.get_parent()
+
+    while True:
+        print(f"Current Node State: {current_node.get_state()}")
+        if current_node.get_parent() == None:
+            print("Current Node Parent: None")
+            break
+        print(f"Current Node Parent: {current_node.get_parent().get_state()}")
+        if current_node.get_parent() == None:
+            break
+        current_node = current_node.get_parent()
+
 
     # graph = cm.get_graph()
 
