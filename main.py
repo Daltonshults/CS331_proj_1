@@ -2,7 +2,9 @@ from map_parser import MapParser
 from city_factory import CityFactory
 from map import CountryMap
 import argparse
-from bfs import BreadthFirstSearch 
+from bfs import BreadthFirstSearch
+from dls import DepthLimitedSearch
+
 def arg_parsing():
     parser = argparse.ArgumentParser(description="Process a map file.")
 
@@ -63,9 +65,9 @@ def main():
 
     bfs = BreadthFirstSearch(cm)
 
-    path = bfs.search("nice", "brest")
+    final_node = bfs.search("nice", "brest")
 
-    current_node = path
+    current_node = final_node
 
     # while current_node.get_parent() != None:
     #     print(current_node.get_city_name())
@@ -81,10 +83,27 @@ def main():
             break
         current_node = current_node.get_parent()
 
+    print(f"\n\n------------------------------------------------------------------------------------------------------------------\n\n")
 
+    dls = DepthLimitedSearch(cm)
+
+    final_node = dls.depth_limited_search("strasbourg", "toulouse", 4)
+    current_node = final_node
+
+    
     # graph = cm.get_graph()
+    print(f"Final Node: {final_node.get_state()}")
 
-    # neighbors = cm.get_neighbors("paris")
+    while True:
+        print(f"Current Node State: {current_node.get_state()}")
+        if current_node.get_parent() == None:
+            print("Current Node Parent: None")
+            break
+        print(f"Current Node Parent: {current_node.get_parent().get_state()}")
+        if current_node.get_parent() == None:
+            break
+        current_node = current_node.get_parent()
+    neighbors = cm.get_neighbors("paris")
 
 
     # agent = MapAgent("caen", SimpleQueue())
