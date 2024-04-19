@@ -99,11 +99,18 @@ class DepthLimitedSearch:
         return result
 
 
+class IterativeDepthLimitedSearch:
+    
+    def __init__(self, country_map, depth_limited_search=None):
+        if depth_limited_search is None:
+            self.dls = DepthLimitedSearch(country_map)
+        else:
+            self.dls = depth_limited_search
 
     def iterative_depth_limited_search(self, initial, goal, max_depth):
         for depth in range(0, max_depth+1):
             print(f"Depth: {depth}\n\n")
-            result = self.depth_limited_search(initial, goal, depth)
+            result = self.dls.depth_limited_search(initial, goal, depth)
 
             if result != "cutoff" and result != None:
                 return result
