@@ -100,13 +100,12 @@ class DepthLimitedSearch:
 
 
 
-    def iterative_depth_limited_search(self, max_depth):
-        ...
+    def iterative_depth_limited_search(self, initial, goal, max_depth):
+        for depth in range(0, max_depth+1):
+            print(f"Depth: {depth}\n\n")
+            result = self.depth_limited_search(initial, goal, depth)
 
-node_1 = CityNode("paris", None, None, 0)
-node_2 = CityNode("brest", node_1, None, 0)
-node_3 = CityNode("rennes", node_2, None, 0)
-
-dls = DepthLimitedSearch(None)
-
-print(dls.depth(node_3))
+            if result != "cutoff" and result != None:
+                return result
+            
+        return None
