@@ -3,7 +3,7 @@ from city_factory import CityFactory
 from map import CountryMap
 import argparse
 from bfs import BreadthFirstSearch
-from dls import DepthLimitedSearch
+from dls import DepthLimitedSearch, IterativeDepthLimitedSearch
 
 def arg_parsing():
     parser = argparse.ArgumentParser(description="Process a map file.")
@@ -104,7 +104,8 @@ def main():
             break
         current_node = current_node.get_parent()
     print(f"\n\n------------------------------------------------------------------------------------------------------------------\n\n")
-    final_node = dls.iterative_depth_limited_search("dijon", "rennes", 50)
+    idls = IterativeDepthLimitedSearch(cm)
+    final_node = idls.iterative_depth_limited_search("dijon", "rennes", 50)
     current_node = final_node
 
     while True:
