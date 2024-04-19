@@ -103,9 +103,19 @@ def main():
         if current_node.get_parent() == None:
             break
         current_node = current_node.get_parent()
-    neighbors = cm.get_neighbors("paris")
+    print(f"\n\n------------------------------------------------------------------------------------------------------------------\n\n")
+    final_node = dls.iterative_depth_limited_search("dijon", "rennes", 50)
+    current_node = final_node
 
-
+    while True:
+        print(f"Current Node State: {current_node.get_state()}")
+        if current_node.get_parent() == None:
+            print("Current Node Parent: None")
+            break
+        print(f"Current Node Parent: {current_node.get_parent().get_state()}")
+        if current_node.get_parent() == None:
+            break
+        current_node = current_node.get_parent()
     # agent = MapAgent("caen", SimpleQueue())
 
     # print(f"Agent's Current City: {agent.get_current_city()}")
