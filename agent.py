@@ -19,7 +19,7 @@ class MapAgent:
             self.current_city = destination_city
             '''
             Experimenting with bfs here. I don't think the agent should handle all of this.
-            Instead, it should just handle moving from city to city along a given path.
+            Instead, it should just handle rebuilding the path and moving from a city to the next if needed.
             '''
             self.add_city_to_reached(destination_city)
             new_neighbors = map.get_neighbors(destination_city)

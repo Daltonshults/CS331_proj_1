@@ -1,6 +1,6 @@
 from map_parser import MapParser
-from city_node import CityNode
-from city_node_factory import CityNodeFactory
+from city_node import City
+from city_factory import CityFactory
 from map import CountryMap
 from agent import MapAgent
 import argparse
@@ -78,8 +78,8 @@ def main():
     else:
         visiting = [(args.A, args.B)]
 
-    print(visiting)
-    print(args.algorithm)
+    print(f"Visiting: {visiting}")
+    print(f"Args Algo: {args.algorithm}")
     # print(args.A)
     # print(f"type A: {type(args.A)}\n\n")
     # print(args.B)
@@ -90,7 +90,7 @@ def main():
 
     # for i in range(len(cities)):
     #     print(f"cities[i]: {cities[i]}\ngo_cities_with_weights[i]: {go_cities_with_weights[i]}\ncoordinates[i]: {coordinates[i]}\n\n-----------------------------------\n")
-    cnf = CityNodeFactory()
+    cnf = CityFactory()
     node_list = cnf.create_city_nodes_from_lists(cities, go_cities_with_weights, coordinates)
     cm = CountryMap(node_list)
     cm.create_graph()
@@ -112,11 +112,11 @@ def main():
 
     agent = MapAgent("caen", SimpleQueue())
 
-    print(agent.get_current_city())
+    print(f"Agent's Current City: {agent.get_current_city()}")
 
     grenoble = agent.move_cities("paris", cm)
 
-    print(agent.get_current_city())
+    print(f"Print agent.get_current_city() :{agent.get_current_city()}")
     # print(grenoble)
 
     # dijon = agent.move_cities("dijon", cm)
@@ -126,9 +126,9 @@ def main():
     # for n in neighbors:
     #     print(f"n: {n}\nneighbors[n]: {neighbors[n]}\n\n\n")
 
-    print(agent.get_reached())
+    print(f"agent get reached: {agent.get_reached()}")
     front = agent.get_frontier()
-    print(front)
+    print(f"Get Frontier: {front}")
 
     temp = []
 

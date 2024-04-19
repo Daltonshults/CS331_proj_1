@@ -1,10 +1,10 @@
 class CountryMap:
-    def __init__(self, city_nodes):
+    def __init__(self, cities):
         self.graph = {}
-        self.city_nodes = city_nodes
+        self.cities = cities
 
     def create_graph(self):
-        for city in self.city_nodes:
+        for city in self.cities:
             self.graph[city.city_name] = {}
 
             for go_city in city.go_cities_with_weights:
@@ -13,7 +13,7 @@ class CountryMap:
     def get_graph(self):
         return self.graph
     
-    def get_city_node(self, city_name):
+    def get_city(self, city_name):
         if city_name in self.graph.keys():
             return self.graph[city_name]
         

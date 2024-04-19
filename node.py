@@ -1,7 +1,34 @@
-class Node:
+class CityNode:
 
     def __init__(self, state, parent, action, path_cost) -> None:
-        self.state = state
-        self.parent = parent
-        self.action = action
-        self.path_cost = path_cost
+        self._state = state
+        self._parent = parent
+        self._action = action
+        self._path_cost = path_cost
+
+    def get_state(self):
+        return self._state
+
+    def set_state(self, state):
+        self._state = state
+
+    def get_parent(self):
+        return self._parent
+
+    def set_parent(self, parent):
+        self._parent = parent
+
+    def get_action(self):
+        return self._action
+
+    def set_action(self, action):
+        self._action = action
+
+    def get_path_cost(self):
+        return self._path_cost
+
+    def set_path_cost(self, path_cost):
+        self._path_cost = path_cost
+
+    def increment_path_cost(self, path_cost_increase):
+        self._path_cost += path_cost_increase

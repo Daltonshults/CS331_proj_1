@@ -1,4 +1,4 @@
-class CityNode:
+class City:
 
     def __init__(self, city_name, go_cities_with_weights, coordinates):
         self.city_name = city_name
