@@ -51,17 +51,15 @@ class BreadthFirstSearch:
             node = self.frontier.get()
 
             # For each child of the node    
-            for i in self.expand(node):
-
-                
+            for child in self.expand(node):                
 
                 # if node is the goal node return
-                if i.get_state() == goal:
-                    return i
+                if child.get_state() == goal:
+                    return child
 
                 # if node not in reached set add node to reached
-                if i.get_state() not in self.reached:
-                    self.reached.append(i.get_state())
-                    self.frontier.put(i)
+                if child.get_state() not in self.reached:
+                    self.reached.append(child.get_state())
+                    self.frontier.put(child)
 
         return None
