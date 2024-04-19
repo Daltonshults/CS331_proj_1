@@ -1,7 +1,7 @@
 from node import Node
 from queue import Queue  as q
 
-class BreadthFristSearch:
+class BreadthFirstSearch:
     def __init__(self, country_map) -> None:
         self.frontier = q()
         self.reached = []
