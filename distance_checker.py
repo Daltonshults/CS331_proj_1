@@ -5,8 +5,8 @@ class DistanceChecker:
         lat = point[0]
         long = point[1]
 
-        d_degrees_lat = lat[0] + lat[1]/60 + lat[2]/3600
-        d_degrees_long = long[0] + long[1]/60 + long[2]/3600
+        d_degrees_lat = int(lat[0]) + int(lat[1])/60 + int(lat[2])/3600
+        d_degrees_long = int(long[0]) + int(long[1])/60 + int(long[2])/3600
         
         if lat[3] == "S":
             d_degrees_lat = -d_degrees_lat
@@ -50,6 +50,9 @@ class HaversineDistance(DistanceChecker):
 
         return self.compute_distance(self.compute_c(alpha), r)
     
+    def distance(self, point_1, point_2):
+        return self.haversine(point_1, point_2)
+    
 class EuclideanDistance(DistanceChecker):
 
     def euclidean(self, point_1, point_2):
@@ -69,4 +72,7 @@ class EuclideanDistance(DistanceChecker):
         #                                   = 69.4 miles 
         #                                   = 111.2 kilometers
         return total * 111.2
+    
+    def distance(self, point_1, point_2):
+        return self.euclidean(point_1, point_2)
     
