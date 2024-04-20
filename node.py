@@ -35,3 +35,15 @@ class CityNode:
 
     def __lt__(self, other):
         return self._path_cost < other.get_path_cost()
+    
+class CityNodeAStar(CityNode):
+    
+    def __init__(self, state, parent, action, path_cost, f_score=None) -> None:
+        super().__init__(state, parent, action, path_cost)
+        self.f_score = f_score
+    
+    def get_f_score(self):
+        return self.f_score
+    
+    def __lt__(self, other):
+        return self.f_score < other.f_score
