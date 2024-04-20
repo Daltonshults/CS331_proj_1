@@ -27,17 +27,7 @@ class UniformCostSearch:
             nodes.append(new_node)
 
         return nodes
-            # node = CityNode(state=neighbor[0],
-            #                 parent=current_node,
-            #                 action=None,
-            #                 path_cost=neighbor[1])
-            
-            # self.frontier.put(node)
 
-        # neighbors = self.map.get_neighbors(current_node.get_state())
-
-        # for i in neighbors:
-        #     print(i)
 
     def uniform_cost_search(self, initial, goal, city_to_weight_map):
         # Set initial node
