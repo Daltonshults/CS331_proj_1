@@ -97,16 +97,20 @@ def main():
 
         astar = AStarSearch(cm)
         hd = HaversineDistance()
+        print(f"\nStarting: {i[0]}\nEnding: {i[1]}")
         last_node = astar.astar_search_euclidean(i[0], i[1], city_to_weights_map, city_to_coordinates_map)
 
         current_node = last_node
-
+        path = []
         while current_node !=None:
-            print(f"Current Node State: {current_node.get_state()}\nCurrent Node Path Cost: {current_node.get_path_cost()}\nF-score: {current_node.get_f_score()}\n")
-            if current_node.get_parent() == None:
-                print("Current Node Parent: None")
+            #print(f"Current Node State: {current_node.get_state()}\nCurrent Node Path Cost: {current_node.get_path_cost()}\nF-score: {current_node.get_f_score()}\n")
+            path.append(current_node.get_state())
+            #if current_node.get_parent() == None:
+                #print("Current Node Parent: None")
 
             current_node = current_node.get_parent()
+
+        print(f"Path: {path[::-1]}")
     # for i in range(len(cities)):
     #     print(f"City: {cities[i]}\nGo Cities With Weights: {go_cities_with_weights[i]}")
 
