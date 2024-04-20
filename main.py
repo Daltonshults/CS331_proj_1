@@ -5,7 +5,8 @@ import argparse
 from bfs import BreadthFirstSearch
 from dls import IterativeDepthLimitedSearch
 from ucs import UniformCostSearch
-
+from astar import AStarSearch
+from distance_checker import EuclideanDistance, HaversineDistance
 def arg_parsing():
     parser = argparse.ArgumentParser(description="Process a map file.")
 
@@ -42,6 +43,14 @@ def get_city_to_weights_map(node_list):
         city_to_weights_map[i.get_city_name()] = i.get_go_cities_with_weights()
 
     return city_to_weights_map
+
+def get_city_to_coordinates_map(node_list):
+    city_to_coordinates_map = {}
+
+    for i in node_list:
+        city_to_coordinates_map[i.get_city_name()] = i.get_coordinates()
+
+    return city_to_coordinates_map
 
 def main():
     args = arg_parsing()
@@ -81,25 +90,41 @@ def main():
 
     print(f"City to Weights Map: {city_to_weights_map}")
 
+    city_to_coordinates_map = get_city_to_coordinates_map(node_list)
 
+    print(f"City to Coordinates Map: {city_to_coordinates_map}")
+    for i in visiting:
+
+        astar = AStarSearch(cm)
+        hd = HaversineDistance()
+        last_node = astar.astar_search_haversine(i[0], i[1], city_to_weights_map, city_to_coordinates_map)
+
+        current_node = last_node
+
+        while current_node !=None:
+            print(f"Current Node State: {current_node.get_state()}\nCurrent Node Path Cost: {current_node.get_path_cost()}\nF-score: {current_node.get_f_score()}\n")
+            if current_node.get_parent() == None:
+                print("Current Node Parent: None")
+
+            current_node = current_node.get_parent()
     # for i in range(len(cities)):
     #     print(f"City: {cities[i]}\nGo Cities With Weights: {go_cities_with_weights[i]}")
 
-    print(type(node_list))
+    # print(type(node_list))
 
-    bfs = UniformCostSearch(cm)
+    # bfs = UniformCostSearch(cm)
 
-    expanded = bfs.best_first_search("paris", "nice", city_to_weights_map)
+    # expanded = bfs.best_first_search("paris", "nice", city_to_weights_map)
 
-    current_node = expanded
-    print(f"\n------------------------------------------------------------------------------------------------------------------\n")
-    while current_node != None:
-        print(f"Current Node State: {current_node.get_state()}")
-        if current_node.get_parent() == None:
-            print("Current Node Parent: None")
-            break
-        else:
-            current_node = current_node.get_parent()
+    # current_node = expanded
+    # print(f"\n------------------------------------------------------------------------------------------------------------------\n")
+    # while current_node != None:
+    #     print(f"Current Node State: {current_node.get_state()}")
+    #     if current_node.get_parent() == None:
+    #         print("Current Node Parent: None")
+    #         break
+    #     else:
+    #         current_node = current_node.get_parent()
 
     
     # for i in visiting:
