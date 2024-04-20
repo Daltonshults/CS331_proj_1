@@ -32,3 +32,6 @@ class CityNode:
 
     def increment_path_cost(self, path_cost_increase):
         self._path_cost += path_cost_increase
+
+    def __lt__(self, other):
+        return self._path_cost < other.get_path_cost()
