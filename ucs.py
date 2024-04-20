@@ -65,7 +65,7 @@ class UniformCostSearch:
                 # s = child.state
                 s = child.get_state()
 
-                # if s is not in reached or child.PATH-COSE < reached[s].PATH-COST then
+                # if s is not in reached or child.PATH-COST < reached[s].PATH-COST then
                 if s not in self.reached or child.get_path_cost() < self.reached[s].get_path_cost():
                     # reached[s] = child
                     self.reached[s] = child
