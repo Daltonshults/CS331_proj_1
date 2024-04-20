@@ -97,7 +97,7 @@ def main():
 
         astar = AStarSearch(cm)
         hd = HaversineDistance()
-        last_node = astar.astar_search_haversine(i[0], i[1], city_to_weights_map, city_to_coordinates_map)
+        last_node = astar.astar_search_euclidean(i[0], i[1], city_to_weights_map, city_to_coordinates_map)
 
         current_node = last_node
 
