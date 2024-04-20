@@ -38,7 +38,7 @@ class CityNode:
     
 class CityNodeAStar(CityNode):
     
-    def __init__(self, state, parent, action, path_cost, f_score=None) -> None:
+    def __init__(self, state, parent, action, path_cost, f_score=0) -> None:
         super().__init__(state, parent, action, path_cost)
         self.f_score = f_score
     
