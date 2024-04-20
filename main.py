@@ -3,7 +3,8 @@ from city_factory import CityFactory
 from map import CountryMap
 import argparse
 from bfs import BreadthFirstSearch
-from dls import DepthLimitedSearch, IterativeDepthLimitedSearch
+from dls import IterativeDepthLimitedSearch
+from ucs import UniformCostSearch
 
 def arg_parsing():
     parser = argparse.ArgumentParser(description="Process a map file.")
@@ -34,6 +35,14 @@ def arg_parsing():
 
     return args
 
+def get_city_to_weights_map(node_list):
+    city_to_weights_map = {}
+
+    for i in node_list:
+        city_to_weights_map[i.get_city_name()] = i.get_go_cities_with_weights()
+
+    return city_to_weights_map
+
 def main():
     args = arg_parsing()
 
@@ -63,39 +72,69 @@ def main():
     cm = CountryMap(node_list)
     cm.create_graph()
 
-    for i in visiting:
-        bfs = BreadthFirstSearch(cm)
+    # city_to_weights_map = {}
 
-        final_node = bfs.search(i[0], i[1])
+    # for i in node_list:
+    #     print(f"Node list: {i.get_city_name()}\nNeighbors: {i.get_go_cities_with_weights()}")
+    #     city_to_weights_map[i.get_city_name()] = i.get_go_cities_with_weights()
+    city_to_weights_map = get_city_to_weights_map(node_list)
 
-        current_node = final_node
+    print(f"City to Weights Map: {city_to_weights_map}")
 
-        while True:
-            print(f"Current Node State: {current_node.get_state()}")
-            if current_node.get_parent() == None:
-                print("Current Node Parent: None")
-                break
-            #print(f"Current Node Parent: {current_node.get_parent().get_state()}")
-            if current_node.get_parent() == None:
-                break
+
+    # for i in range(len(cities)):
+    #     print(f"City: {cities[i]}\nGo Cities With Weights: {go_cities_with_weights[i]}")
+
+    print(type(node_list))
+
+    bfs = UniformCostSearch(cm)
+
+    expanded = bfs.best_first_search("paris", "nice", city_to_weights_map)
+
+    current_node = expanded
+    print(f"\n------------------------------------------------------------------------------------------------------------------\n")
+    while current_node != None:
+        print(f"Current Node State: {current_node.get_state()}")
+        if current_node.get_parent() == None:
+            print("Current Node Parent: None")
+            break
+        else:
             current_node = current_node.get_parent()
 
-    for i in visiting:
-        dls = IterativeDepthLimitedSearch(cm)
-        print(f"\n------------------------------------------------------------------------------------------------------------------\n")
-        print(f"\nStarting: {i[0]}\nEnding: {i[1]}\n")
-        final_node = dls.iterative_depth_limited_search(i[0], i[1], 10)
-        current_node = final_node
+    
+    # for i in visiting:
+    #     bfs = BreadthFirstSearch(cm)
 
-        while True:
-            print(f"Current Node State: {current_node.get_state()}")
-            if current_node.get_parent() == None:
-                print("Current Node Parent: None")
-                break
-            #print(f"Current Node Parent: {current_node.get_parent().get_state()}")
-            if current_node.get_parent() == None:
-                break
-            current_node = current_node.get_parent()
+    #     final_node = bfs.search(i[0], i[1])
+
+    #     current_node = final_node
+
+    #     while True:
+    #         print(f"Current Node State: {current_node.get_state()}")
+    #         if current_node.get_parent() == None:
+    #             print("Current Node Parent: None")
+    #             break
+    #         #print(f"Current Node Parent: {current_node.get_parent().get_state()}")
+    #         if current_node.get_parent() == None:
+    #             break
+    #         current_node = current_node.get_parent()
+
+    # for i in visiting:
+    #     dls = IterativeDepthLimitedSearch(cm)
+    #     print(f"\n------------------------------------------------------------------------------------------------------------------\n")
+    #     print(f"\nStarting: {i[0]}\nEnding: {i[1]}\n")
+    #     final_node = dls.iterative_depth_limited_search(i[0], i[1], 10)
+    #     current_node = final_node
+
+    #     while True:
+    #         print(f"Current Node State: {current_node.get_state()}")
+    #         if current_node.get_parent() == None:
+    #             print("Current Node Parent: None")
+    #             break
+    #         #print(f"Current Node Parent: {current_node.get_parent().get_state()}")
+    #         if current_node.get_parent() == None:
+    #             break
+    #         current_node = current_node.get_parent()
 
     
 
