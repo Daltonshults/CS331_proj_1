@@ -7,6 +7,7 @@ from dls import IterativeDepthLimitedSearch
 from ucs import UniformCostSearch
 from astar import AStarSearch
 from distance_checker import EuclideanDistance, HaversineDistance
+
 def arg_parsing():
     parser = argparse.ArgumentParser(description="Process a map file.")
 
