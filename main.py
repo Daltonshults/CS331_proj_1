@@ -41,7 +41,7 @@ def main():
         visiting = [
             ("brest", "nice"),
             ("montpellier", "calais"),
-            ("stratsbourg", "bordeaux"),
+            ("strasbourg", "bordeaux"),
             ("paris", "grenoble"),
             ("grenoble", "paris"),
             ("brest", "grenoble"),
@@ -63,79 +63,117 @@ def main():
     cm = CountryMap(node_list)
     cm.create_graph()
 
-    bfs = BreadthFirstSearch(cm)
+    for i in visiting:
+        bfs = BreadthFirstSearch(cm)
 
-    final_node = bfs.search("nice", "brest")
+        final_node = bfs.search(i[0], i[1])
 
-    current_node = final_node
+        current_node = final_node
 
-    # while current_node.get_parent() != None:
-    #     print(current_node.get_city_name())
-    #     current_node = current_node.get_parent()
+        while True:
+            print(f"Current Node State: {current_node.get_state()}")
+            if current_node.get_parent() == None:
+                print("Current Node Parent: None")
+                break
+            #print(f"Current Node Parent: {current_node.get_parent().get_state()}")
+            if current_node.get_parent() == None:
+                break
+            current_node = current_node.get_parent()
 
-    while True:
-        print(f"Current Node State: {current_node.get_state()}")
-        if current_node.get_parent() == None:
-            print("Current Node Parent: None")
-            break
-        print(f"Current Node Parent: {current_node.get_parent().get_state()}")
-        if current_node.get_parent() == None:
-            break
-        current_node = current_node.get_parent()
+    for i in visiting:
+        dls = IterativeDepthLimitedSearch(cm)
+        print(f"\n------------------------------------------------------------------------------------------------------------------\n")
+        print(f"\nStarting: {i[0]}\nEnding: {i[1]}\n")
+        final_node = dls.iterative_depth_limited_search(i[0], i[1], 10)
+        current_node = final_node
 
-    print(f"\n\n------------------------------------------------------------------------------------------------------------------\n\n")
-
-    dls = DepthLimitedSearch(cm)
-
-    final_node = dls.depth_limited_search("strasbourg", "toulouse", 4)
-    current_node = final_node
+        while True:
+            print(f"Current Node State: {current_node.get_state()}")
+            if current_node.get_parent() == None:
+                print("Current Node Parent: None")
+                break
+            #print(f"Current Node Parent: {current_node.get_parent().get_state()}")
+            if current_node.get_parent() == None:
+                break
+            current_node = current_node.get_parent()
 
     
-    # graph = cm.get_graph()
-    print(f"Final Node: {final_node.get_state()}")
 
-    while True:
-        print(f"Current Node State: {current_node.get_state()}")
-        if current_node.get_parent() == None:
-            print("Current Node Parent: None")
-            break
-        print(f"Current Node Parent: {current_node.get_parent().get_state()}")
-        if current_node.get_parent() == None:
-            break
-        current_node = current_node.get_parent()
-    print(f"\n\n------------------------------------------------------------------------------------------------------------------\n\n")
-    idls = IterativeDepthLimitedSearch(cm)
-    final_node = idls.iterative_depth_limited_search("dijon", "rennes", 50)
-    current_node = final_node
+            
 
-    while True:
-        print(f"Current Node State: {current_node.get_state()}")
-        if current_node.get_parent() == None:
-            print("Current Node Parent: None")
-            break
-        print(f"Current Node Parent: {current_node.get_parent().get_state()}")
-        if current_node.get_parent() == None:
-            break
-        current_node = current_node.get_parent()
-    # agent = MapAgent("caen", SimpleQueue())
+    # bfs = BreadthFirstSearch(cm)
 
-    # print(f"Agent's Current City: {agent.get_current_city()}")
+    # final_node = bfs.search("nice", "brest")
 
-    # grenoble = agent.move_cities("paris", cm)
+    # current_node = final_node
 
-    # print(f"Print agent.get_current_city() :{agent.get_current_city()}")
+    # # while current_node.get_parent() != None:
+    # #     print(current_node.get_city_name())
+    # #     current_node = current_node.get_parent()
 
-    # print(f"agent get reached: {agent.get_reached()}")
-    # front = agent.get_frontier()
-    # print(f"Get Frontier: {front}")
+    # while True:
+    #     print(f"Current Node State: {current_node.get_state()}")
+    #     if current_node.get_parent() == None:
+    #         print("Current Node Parent: None")
+    #         break
+    #     print(f"Current Node Parent: {current_node.get_parent().get_state()}")
+    #     if current_node.get_parent() == None:
+    #         break
+    #     current_node = current_node.get_parent()
 
-    # temp = []
+    # print(f"\n\n------------------------------------------------------------------------------------------------------------------\n\n")
 
-    # while not front.empty():
-    #     temp.append(front.get())
-    # print(f"we here-----------------------------------\n\n")
-    # for i in temp:
-    #     print(i)
+    # dls = DepthLimitedSearch(cm)
+
+    # final_node = dls.depth_limited_search("strasbourg", "toulouse", 4)
+    # current_node = final_node
+
+    
+    # # graph = cm.get_graph()
+    # print(f"Final Node: {final_node.get_state()}")
+
+    # while True:
+    #     print(f"Current Node State: {current_node.get_state()}")
+    #     if current_node.get_parent() == None:
+    #         print("Current Node Parent: None")
+    #         break
+    #     print(f"Current Node Parent: {current_node.get_parent().get_state()}")
+    #     if current_node.get_parent() == None:
+    #         break
+    #     current_node = current_node.get_parent()
+    # print(f"\n\n------------------------------------------------------------------------------------------------------------------\n\n")
+    # idls = IterativeDepthLimitedSearch(cm)
+    # final_node = idls.iterative_depth_limited_search("dijon", "rennes", 50)
+    # current_node = final_node
+
+    # while True:
+    #     print(f"Current Node State: {current_node.get_state()}")
+    #     if current_node.get_parent() == None:
+    #         print("Current Node Parent: None")
+    #         break
+    #     print(f"Current Node Parent: {current_node.get_parent().get_state()}")
+    #     if current_node.get_parent() == None:
+    #         break
+    #     current_node = current_node.get_parent()
+    # # agent = MapAgent("caen", SimpleQueue())
+
+    # # print(f"Agent's Current City: {agent.get_current_city()}")
+
+    # # grenoble = agent.move_cities("paris", cm)
+
+    # # print(f"Print agent.get_current_city() :{agent.get_current_city()}")
+
+    # # print(f"agent get reached: {agent.get_reached()}")
+    # # front = agent.get_frontier()
+    # # print(f"Get Frontier: {front}")
+
+    # # temp = []
+
+    # # while not front.empty():
+    # #     temp.append(front.get())
+    # # print(f"we here-----------------------------------\n\n")
+    # # for i in temp:
+    # #     print(i)
 
 if __name__ == "__main__":
     main()
