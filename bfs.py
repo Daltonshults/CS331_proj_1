@@ -18,7 +18,7 @@ class BreadthFirstSearch:
             node = CityNode(state=i,
                             parent=current_node,
                             action="Explored",
-                            path_cost=None)
+                            path_cost=0)
             
             nieghbor_nodes.append(node)
 
