@@ -74,7 +74,7 @@ class EuclideanDistance(DistanceChecker):
     def distance(self, point_1, point_2):
         return self.euclidean(point_1, point_2)
 
-
+'''
 hdc = HaversineDistance()
 track_distances = []
 goal = [(48, 23, 0, "N"), (5, 29, 0, "W")]
@@ -131,3 +131,4 @@ print(hdc.distance(nantes, goal))
 rennes = [(47, 6, 53, "N"), (1, 40, 46, "W")]
 brest = [(48, 23, 0, "N"), (5, 29, 0, "W")]
 print(hdc.distance(rennes, goal))
+'''
