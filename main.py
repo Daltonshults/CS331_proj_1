@@ -8,34 +8,35 @@ from ucs import UniformCostSearch
 from astar import AStarSearch
 from distance_checker import EuclideanDistance, HaversineDistance
 
-def arg_parsing():
-    parser = argparse.ArgumentParser(description="Process a map file.")
+class ArgParser:        
+    def arg_parsing():
+        parser = argparse.ArgumentParser(description="Process a map file.")
 
-    parser.add_argument('-algorithm',
-                        type=str,
-                        help="The algorithm to use.",
-                        default="bsf",
-                        nargs="?")
-    
-    parser.add_argument('-A',
-                        type=str,
-                        help="The A argument.",
-                        nargs="?")
-    
-    parser.add_argument('-B',
-                        type=str,
-                        help="The B argument.",
-                        nargs="?")
-    
-    parser.add_argument('-file',
-                        type=str,
-                        help="The file to process.",
-                        default="./france.txt",
-                        nargs="?")
+        parser.add_argument('-algorithm',
+                            type=str,
+                            help="The algorithm to use.",
+                            default="bsf",
+                            nargs="?")
+        
+        parser.add_argument('-A',
+                            type=str,
+                            help="The A argument.",
+                            nargs="?")
+        
+        parser.add_argument('-B',
+                            type=str,
+                            help="The B argument.",
+                            nargs="?")
+        
+        parser.add_argument('-file',
+                            type=str,
+                            help="The file to process.",
+                            default="./france.txt",
+                            nargs="?")
 
-    args = parser.parse_args()
+        args = parser.parse_args()
 
-    return args
+        return args
 
 def get_city_to_weights_map(node_list):
     city_to_weights_map = {}
@@ -54,7 +55,7 @@ def get_city_to_coordinates_map(node_list):
     return city_to_coordinates_map
 
 def main():
-    args = arg_parsing()
+    args = ArgParser.arg_parsing()
 
     if args.A == None or args.B == None:
         visiting = [
@@ -80,13 +81,7 @@ def main():
     cnf = CityFactory()
     node_list = cnf.create_city_nodes_from_lists(cities, go_cities_with_weights, coordinates)
     cm = CountryMap(node_list)
-    cm.create_graph()
 
-    # city_to_weights_map = {}
-
-    # for i in node_list:
-    #     print(f"Node list: {i.get_city_name()}\nNeighbors: {i.get_go_cities_with_weights()}")
-    #     city_to_weights_map[i.get_city_name()] = i.get_go_cities_with_weights()
     city_to_weights_map = get_city_to_weights_map(node_list)
 
     print(f"City to Weights Map: {city_to_weights_map}")
