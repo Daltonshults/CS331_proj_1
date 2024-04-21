@@ -7,8 +7,53 @@ class Agent:
         self._map = map
         self.actions = actions
     
-    def take_path(self, path):
-        pass
+    def construct_path(self, final_node):
+        path = []
+        current_node = final_node
+
+        while current_node != None:
+            path.append(current_node)
+            current_node = current_node.get_parent()
+
+        return path[::-1]
+    
+    def travel_path(self, path):
+
+        for i in range(0, len(path)-1):
+            self.actions.move_city_a_to_city_b(
+                city_a = path[i].get_state(), 
+                city_b = path[i+1].get_state(),
+                node =path[i])
+            
+        path[-1].set_action("Goal")
+
+        return path
+    
+    def print_path_to_solutions(self, path, algo_str):
+        print("\n---------------------------------------------\n")
+        with open('solutions.txt', 'a') as f:
+            f.write("\n---------------------------------------------\n")
+            f.write(f"Algorithm: {algo_str}\n")
+            for i in path:
+                f.write(f"Actions: {i.get_action()}\n")
+
+            
+    
+    def get_path_cost(self, path):
+        cost = 0
+        for i in path:
+            cost += i.get_path_cost()
+
+        return cost
+    
+    def get_results(self, final_node_list, algo_str):
+        for final_node in final_node_list:
+            path = self.construct_path(final_node)
+            path = self.travel_path(path)
+
+            self.print_path_to_solutions(path, algo_str)
+
+
     
     # Getters
     def get_algorithm(self):
