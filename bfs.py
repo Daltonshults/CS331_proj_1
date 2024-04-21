@@ -13,8 +13,8 @@ class BreadthFirstSearch:
         '''
         neighbors = self.map.get_neighbors(current_node.get_state())
         nieghbor_nodes = []
-        print(f"Current Node: {current_node.get_state()}")
-        print(f"Neighbors: {neighbors}")
+        # print(f"Current Node: {current_node.get_state()}")
+        # print(f"Neighbors: {neighbors}")
 
         for i in neighbors.keys():
             node = CityNode(state=i,
@@ -30,7 +30,7 @@ class BreadthFirstSearch:
 
 
     def search(self, intitial, goal):
-        print(f"\n------------------------------------------------------------------------------------------------------\n")
+        #print(f"\n------------------------------------------------------------------------------------------------------\n")
         # Initialize first node ROOT
         node = CityNode(intitial, None, None, 0)
 
