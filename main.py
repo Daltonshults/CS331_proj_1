@@ -192,7 +192,7 @@ def main():
     
     else:
         visiting = [(args.A, args.B)]
-        algo = args.algorithm
+        algo = args.algorithm.lower()
         mp = MapParser()
         cnf = CityFactory()
         mg = MapGenerator()
