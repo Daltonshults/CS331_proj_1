@@ -5,8 +5,10 @@ import argparse
 from bfs import BreadthFirstSearch
 from dls import IterativeDepthLimitedSearch
 from ucs import UniformCostSearch
-from astar import AStarSearch
+from astar import AStarEuclideanSearch, AStarHaversineSearch
 from distance_checker import EuclideanDistance, HaversineDistance
+from agent import Agent
+from agent_actions import AgentActions
 
 class ArgParser:        
     def arg_parsing():
@@ -75,6 +77,7 @@ def main():
         cnf = CityFactory()
         mg = MapGenerator()
         
+        
 
         cities, go_cities_with_weights, coordinates = mp.driver(args.file)
         node_list = cnf.create_city_nodes_from_lists(cities,
@@ -85,13 +88,19 @@ def main():
         city_to_coordinates_map = mg.get_city_to_coordinates_map(node_list)
         
         cm = CountryMap(node_list)
-
+        agent = Agent(None, None, None, cm, AgentActions)
 
         # Breadth-First Search ---------------------------------------------------------------------
         bfs_final_nodes = []
         for cities in visiting:
             bfs = BreadthFirstSearch(cm)
-            bfs_final_node = bfs.search(cities[0], cities[1])
+
+            agent.set_algorithm(bfs)
+            agent.set_goal_city(cities[1])
+            agent.set_start_city(cities[0])
+
+
+            bfs_final_node = agent.search()
             bfs_final_nodes.append(bfs_final_node)
 
 
@@ -99,29 +108,55 @@ def main():
         idls_final_nodes = []
         for cities in visiting:
             idls = IterativeDepthLimitedSearch(cm)
-            idls_final_node = idls.iterative_depth_limited_search(cities[0], cities[1], 50)
+            
+            agent.set_algorithm(idls)
+            agent.set_goal_city(cities[1])
+            agent.set_start_city(cities[0])
+
+            idls_final_node = agent.search()
             idls_final_nodes.append(idls_final_node)
 
 
         # Uniform-Cost Search ---------------------------------------------------------------------
         ucs_final_nodes = []
         for cities in visiting:
-            ucs = UniformCostSearch(cm)
-            ucs_final_node = ucs.uniform_cost_search(cities[0], cities[1], city_to_weights_map)
+            ucs = UniformCostSearch(country_map=cm,
+                                    city_to_weight_map=city_to_weights_map)
+            
+            agent.set_algorithm(ucs)
+            agent.set_goal_city(cities[1])
+            agent.set_start_city(cities[0])
+            
+            ucs_final_node = ucs.uniform_cost_search(cities[0], cities[1])
             ucs_final_nodes.append(ucs_final_node)
 
         # A-Star Euclidean Search ---------------------------------------------------------------------------
         astar_e_final_nodes = []
         for cities in visiting:
-            astar_e = AStarSearch(cm)
-            astar_e_final_node = astar_e.astar_search_euclidean(cities[0], cities[1], city_to_weights_map, city_to_coordinates_map)
+            astar_e = AStarEuclideanSearch(country_map=cm,
+                                  city_to_weight_map=city_to_weights_map,
+                                  city_to_coords=city_to_coordinates_map)
+            
+            agent.set_algorithm(astar_e)
+            agent.set_goal_city(cities[1])
+            agent.set_start_city(cities[0])
+            
+            
+            astar_e_final_node = agent.search()
             astar_e_final_nodes.append(astar_e_final_node)
 
         # A-Star Haversine Search ---------------------------------------------------------------------------
         astar_h_final_nodes = []
         for cities in visiting:
-            astar_h = AStarSearch(cm)
-            astar_h_final_node = astar_h.astar_search_haversine(cities[0], cities[1], city_to_weights_map, city_to_coordinates_map)
+            astar_h = AStarHaversineSearch(country_map=cm,
+                                  city_to_weight_map=city_to_weights_map,
+                                  city_to_coords=city_to_coordinates_map)
+            
+            agent.set_algorithm(astar_h)
+            agent.set_goal_city(cities[1])
+            agent.set_start_city(cities[0])
+            
+            astar_h_final_node = agent.search()#astar_h.astar_search_haversine(cities[0], cities[1])
             astar_h_final_nodes.append(astar_h_final_node)
 
         print(f"Length of astar_h_final_nodes: {len(astar_h_final_nodes)}")
