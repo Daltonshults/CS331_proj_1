@@ -32,7 +32,7 @@ class DepthLimitedSearch:
         for i in neighbors.keys():
             node = CityNode(state=i,
                             parent=current_node,
-                            action=None,
+                            action="Explored",
                             path_cost=None)
             
             nieghbor_nodes.append(node)
@@ -55,15 +55,17 @@ class DepthLimitedSearch:
 
     def depth_limited_search(self, initial, goal, max_depth):
         # Add initial node to the frontier using a LIFO queue
-        self.frontier.put(CityNode(initial, None, None, 0))
+        self.frontier.put(CityNode(state=initial,
+                                   parent= None,
+                                   action ="Initial",
+                                   path_cost=0))
 
         result = None
 
         # while frontier is not empty
-        i = 0
+
         while not self.frontier.empty():
 
-            i += 1
             # Node = frontier.pop()
             node, path = self.pop_node_path()
 
@@ -82,6 +84,7 @@ class DepthLimitedSearch:
                 for child in self.expand(node):
                     
                     # Add child to frontier
+                    child.set_action("On Frontier")
                     self.frontier.put(child)
 
         return result
@@ -105,3 +108,6 @@ class IterativeDepthLimitedSearch:
             elif result == "cutoff":
                 return "cutoff"            
         return None
+    
+    def search(self, initial, goal):
+        return self.iterative_depth_limited_search(initial, goal, 50)

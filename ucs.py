@@ -2,36 +2,41 @@ from queue import PriorityQueue
 from node import CityNode
 class UniformCostSearch:
 
-    def __init__(self, country_map):
+    def __init__(self, country_map, city_to_weight_map):
         self.frontier = PriorityQueue()
         self.reached = {}
         self.map = country_map
+        self.city_to_weight_map = city_to_weight_map
 
     def expand(self, current_node, city_to_weight_map):
 
         nodes = []
-        # print(f"Current Node: {current_node.get_state()}")
-        # print(f"Neighbors: {city_to_weight_map[current_node.get_state()]}")
+
         state = current_node.get_state()
         neighbors = city_to_weight_map[state]
 
         for neighbor in neighbors:
-            # print(f"Neighbor: {neighbor}")
-            # print(f"Neighbor[0]: {neighbor[0]}")
-            # print(f"Neighbor[1]: {neighbor[1]}")
+
             s_prime = neighbor[0]
 
             cost = int(neighbor[1]) + current_node.get_path_cost()
 
-            new_node = CityNode(s_prime, current_node, None, cost)
+            new_node = CityNode(state=s_prime,
+                                parent = current_node,
+                                action="Explored",
+                                path_cost=cost)
+            
             nodes.append(new_node)
 
         return nodes
 
 
-    def uniform_cost_search(self, initial, goal, city_to_weight_map):
+    def uniform_cost_search(self, initial, goal):
         # Set initial node
-        node = CityNode(initial, None, None, 0)
+        node = CityNode(state = initial,
+                        parent = None,
+                        action = "Initial",
+                        path_cost = 0)
 
         # Put node in priority queue
         self.frontier.put(node)
@@ -50,13 +55,14 @@ class UniformCostSearch:
                 return node
             
             # for each child of the current node EXPAND do
-            for child in self.expand(node, city_to_weight_map):
+            for child in self.expand(node, self.city_to_weight_map):
 
                 # s = child.state
                 s = child.get_state()
 
                 # if s is not in reached or child.PATH-COST < reached[s].PATH-COST then
                 if s not in self.reached or child.get_path_cost() < self.reached[s].get_path_cost():
+                    child.set_action("On Frontier")
                     # reached[s] = child
                     self.reached[s] = child
                     # add child to frontier
@@ -64,3 +70,6 @@ class UniformCostSearch:
                     
         # return failure
         return None
+    
+    def search(self, initial, goal):
+        return self.uniform_cost_search(initial, goal)

@@ -3,24 +3,27 @@ from queue import PriorityQueue
 from distance_checker import EuclideanDistance, HaversineDistance
 
 class AStarSearch:
-    def __init__(self, country_map):
+    def __init__(self, country_map, city_to_weight_map, city_to_coords):
         self.frontier = PriorityQueue()
         self.reached = {}
         self.map = country_map
+        self.city_to_weight_map = city_to_weight_map
+        self.city_to_coords = city_to_coords
 
-    def expand(self, current_node, city_to_weight_map, city_to_cords, goal, heuristic):
+
+    def expand(self, current_node, goal, heuristic):
         nodes = []
 
         state = current_node.get_state()
-        neighbors = city_to_weight_map[state]
+        neighbors = self.city_to_weight_map[state]
 
         for neighbor in neighbors:
             s_prime = neighbor[0]
             
             cost = int(neighbor[1]) + current_node.get_path_cost()
-            # Wrong should be between s_prime and goal
-            h_score = heuristic(point_1 = city_to_cords[s_prime],
-                                  point_2 = city_to_cords[goal])
+
+            h_score = heuristic(point_1 = self.city_to_coords[s_prime],
+                                  point_2 = self.city_to_coords[goal])
             f_score = cost + h_score
             
             new_node = CityNodeAStar(state = s_prime,
@@ -33,9 +36,9 @@ class AStarSearch:
 
         return nodes
 
-    def astar_search(self, initial, goal, city_to_weight_map, city_to_coords, heuristic):
-        initial_h_score = heuristic(point_1 = city_to_coords[initial],
-                                    point_2 = city_to_coords[goal])
+    def astar_search(self, initial, goal, heuristic):
+        initial_h_score = heuristic(point_1 = self.city_to_coords[initial],
+                                    point_2 = self.city_to_coords[goal])
 
         node = CityNodeAStar(state = initial,
                             parent=None,
@@ -55,7 +58,7 @@ class AStarSearch:
             if node.get_state() == goal:
                 return node
 
-            for child in self.expand(node, city_to_weight_map, city_to_coords, goal, heuristic):
+            for child in self.expand(node, goal, heuristic):
                 s = child.get_state()
 
                 if s not in self.reached or child.get_path_cost() < self.reached[s].get_path_cost():
@@ -65,8 +68,25 @@ class AStarSearch:
 
         return None
     
-    def astar_search_haversine(self, initial, goal, city_to_weight_map, city_to_coords):
-        return self.astar_search(initial, goal, city_to_weight_map, city_to_coords, HaversineDistance().distance)
+    def astar_search_haversine(self, initial, goal):
+        return self.astar_search(initial, goal, HaversineDistance().distance)
     
-    def astar_search_euclidean(self, initial, goal, city_to_weight_map, city_to_coords):
-        return self.astar_search(initial, goal, city_to_weight_map, city_to_coords, EuclideanDistance().distance)
+    def astar_search_euclidean(self, initial, goal):
+        return self.astar_search(initial, goal, EuclideanDistance().distance)
+    
+    def search(self, initial, goal):
+        return self.astar_search_haversine(initial, goal)
+    
+class AStarEuclideanSearch(AStarSearch):
+    def __init__(self, country_map, city_to_weight_map, city_to_coords):
+        super().__init__(country_map, city_to_weight_map, city_to_coords)
+    
+    def search(self, initial, goal):
+        return self.astar_search_euclidean(initial, goal)
+    
+class AStarHaversineSearch(AStarSearch):
+    def __init__(self, country_map, city_to_weight_map, city_to_coords):
+        super().__init__(country_map, city_to_weight_map, city_to_coords)
+    
+    def search(self, initial, goal):
+        return self.astar_search_haversine(initial, goal)
