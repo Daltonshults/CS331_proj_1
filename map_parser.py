@@ -1,13 +1,11 @@
 class MapParser:
 
-    def open_map(self, file_path):  # Add 'self' as the first argument
+    def open_map(self, file_path):  
         strings = []
         try:
             with open(file_path, "r") as file:
                 for line in file:
-                    # Process each line here
                     strings.append(line.strip())
-                    #print(line.strip())  # Example: Print each line
 
             return strings
                     
@@ -16,7 +14,7 @@ class MapParser:
         except IOError:
             print(f"Error reading file '{file_path}'.")
 
-    def arrow_split(self, lines):  # Add 'self' as the first argument
+    def arrow_split(self, lines): 
         split_lines_vertex = []
         split_lines_edges = []
 
@@ -52,12 +50,14 @@ class MapParser:
 
             # Pairing every second item on the list.
             for j in range(0, len(splits), 2):
+
+                # Stripping va- from the city name
                 cities_with_weights[i].append((splits[j][3:], splits[j+1]))  
 
         return cities_with_weights
     
     def split_dms(self, dmss):
-        dms_split = []#[[] for i in range(len(dmss) //2)]
+        dms_split = []
         for i in range(len(dmss)):
             first_coord = dmss[i][0:4]
             second_coord = dmss[i][4:8]
@@ -78,12 +78,3 @@ class MapParser:
         
         return cities, go_cities_with_weights, coordinates
             
-
-# def main():
-#     file_path = "./france.txt"
-#     mp = MapParser()
-#     mp.driver(file_path)
-
-
-# if __name__ == "__main__":
-#     main()
