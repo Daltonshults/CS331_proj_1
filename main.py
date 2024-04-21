@@ -6,9 +6,11 @@ from bfs import BreadthFirstSearch
 from dls import IterativeDepthLimitedSearch
 from ucs import UniformCostSearch
 from astar import AStarEuclideanSearch, AStarHaversineSearch
-from distance_checker import EuclideanDistance, HaversineDistance
 from agent import Agent
 from agent_actions import AgentActions
+class LinePrinter:
+    def print_line():
+        print("------------------------------------------------------------------------------------------------------------------")
 
 class ArgParser:        
     def arg_parsing():
@@ -159,6 +161,38 @@ def main():
             astar_h_final_node = agent.search()#astar_h.astar_search_haversine(cities[0], cities[1])
             astar_h_final_nodes.append(astar_h_final_node)
 
+        # Beginning of results
+        
+        # BFS
+        LinePrinter.print_line()
+        print("bfs")
+        agent.get_results(bfs_final_nodes, "bfs")
+
+        # IDLS
+        LinePrinter.print_line()
+        print("idls")
+        agent.get_results(idls_final_nodes, "idls")
+
+        # UCS
+        LinePrinter.print_line()
+        print("ucs")
+        agent.get_results(ucs_final_nodes, "ucs")
+
+        # A* Euclidean
+        LinePrinter.print_line()
+        print("astar_e")
+        agent.get_results(astar_e_final_nodes, "astar_e")
+
+        # A* Haversine
+        LinePrinter.print_line()
+        print("astar_h")
+        agent.get_results(astar_h_final_nodes, "astar_h")
+    
+    else:
+        visiting = [(args.A, args.B)]
+
+        '''
+
         print(f"Length of astar_h_final_nodes: {len(astar_h_final_nodes)}")
         list_of_paths = [[] for _ in range(len(visiting))]
         for search in range(len(astar_h_final_nodes)):
@@ -175,18 +209,30 @@ def main():
         for i in copy_list_of_paths:
             print(i.get_state())
 
+        path = agent.construct_path(astar_h_final_nodes[0])
+        print(f"\nPath: {path}\n")
+        for i in path:  
+            print(i.get_state())
+
+        print(agent.get_path_cost(path))
+
+        traveled_path = agent.travel_path(path)
+
+        for i in traveled_path:
+            print(f"Action: {i.get_action()}"
+                  f"State: {i.get_state()}")
 
 
 
 
-    else:
-        visiting = [(args.A, args.B)]
+
+
 
     
 
     print(f"Visiting: {visiting}")
     print(f"Args Algo: {args.algorithm}")
-    '''
+
     mp = MapParser()
 
     cities, go_cities_with_weights, coordinates = mp.driver(args.file)
