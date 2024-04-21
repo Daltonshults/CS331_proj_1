@@ -33,7 +33,7 @@ class DepthLimitedSearch:
             node = CityNode(state=i,
                             parent=current_node,
                             action="Explored",
-                            path_cost=None)
+                            path_cost=0)
             
             nieghbor_nodes.append(node)
 
@@ -101,13 +101,13 @@ class IterativeDepthLimitedSearch:
         for depth in range(0, max_depth+1):
             result = self.dls.depth_limited_search(initial, goal, depth)
 
-            if result != "cutoff" and result != None:
-                return result
-            elif result == None:
-                return None
-            elif result == "cutoff":
-                return "cutoff"            
+        if result != "cutoff" and result != None:
+            return result
+        elif result == None:
+            return None
+        elif result == "cutoff":
+            return "cutoff"            
         return None
     
     def search(self, initial, goal):
-        return self.iterative_depth_limited_search(initial, goal, 50)
+        return self.iterative_depth_limited_search(initial, goal, 500)
