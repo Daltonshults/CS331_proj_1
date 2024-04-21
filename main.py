@@ -8,6 +8,7 @@ from ucs import UniformCostSearch
 from astar import AStarEuclideanSearch, AStarHaversineSearch
 from agent import Agent
 from agent_actions import AgentActions
+
 class LinePrinter:
     def print_line():
         print("------------------------------------------------------------------------------------------------------------------")
@@ -82,6 +83,7 @@ def main():
         
 
         cities, go_cities_with_weights, coordinates = mp.driver(args.file)
+
         node_list = cnf.create_city_nodes_from_lists(cities,
                                                      go_cities_with_weights,
                                                      coordinates)
@@ -190,218 +192,92 @@ def main():
     
     else:
         visiting = [(args.A, args.B)]
+        algo = args.algorithm
+        mp = MapParser()
+        cnf = CityFactory()
+        mg = MapGenerator()
+        initial = args.A.lower()
+        goal = args.B.lower()
 
-        '''
+        cities, go_cities_with_weights, coordinates = mp.driver(args.file)
 
-        print(f"Length of astar_h_final_nodes: {len(astar_h_final_nodes)}")
-        list_of_paths = [[] for _ in range(len(visiting))]
-        for search in range(len(astar_h_final_nodes)):
-            
-            current_node = astar_h_final_nodes[search]
-
-            while current_node != None:
-                list_of_paths[search].append(current_node)
-                current_node = current_node.get_parent()
-
-        copy_list_of_paths = list_of_paths[0].copy()
-
-        copy_list_of_paths.reverse()        
-        for i in copy_list_of_paths:
-            print(i.get_state())
-
-        path = agent.construct_path(astar_h_final_nodes[0])
-        print(f"\nPath: {path}\n")
-        for i in path:  
-            print(i.get_state())
-
-        print(agent.get_path_cost(path))
-
-        traveled_path = agent.travel_path(path)
-
-        for i in traveled_path:
-            print(f"Action: {i.get_action()}"
-                  f"State: {i.get_state()}")
-
-
-
-
-
-
-
-    
-
-    print(f"Visiting: {visiting}")
-    print(f"Args Algo: {args.algorithm}")
-
-    mp = MapParser()
-
-    cities, go_cities_with_weights, coordinates = mp.driver(args.file)
-
-    cnf = CityFactory()
-    node_list = cnf.create_city_nodes_from_lists(cities, go_cities_with_weights, coordinates)
-    cm = CountryMap(node_list)
-    mg = MapGenerator()
-    city_to_weights_map = mg.get_city_to_weights_map(node_list)
-
-    print(f"City to Weights Map: {city_to_weights_map}")
-
-    city_to_coordinates_map = mg.get_city_to_coordinates_map(node_list)
-
-    print(f"City to Coordinates Map: {city_to_coordinates_map}")
-    for i in visiting:
-
-        astar = AStarSearch(cm)
-        hd = HaversineDistance()
-        print(f"\nStarting: {i[0]}\nEnding: {i[1]}")
-        last_node = astar.astar_search_euclidean(i[0], i[1], city_to_weights_map, city_to_coordinates_map)
-
-        current_node = last_node
-        path = []
-        while current_node !=None:
+        if initial not in cities or goal not in cities:
+            print("One or both of the cities are not in the map.")
+            return
         
-            path.append(current_node.get_state())
 
+        node_list = cnf.create_city_nodes_from_lists(cities,
+                                                     go_cities_with_weights,
+                                                     coordinates)
+        
+        city_to_weights_map = mg.get_city_to_weights_map(node_list)
+        city_to_coordinates_map = mg.get_city_to_coordinates_map(node_list)
+        
+        cm = CountryMap(node_list)
+        agent = Agent(None, None, None, cm, AgentActions)    
 
-            current_node = current_node.get_parent()
+        if algo == "bfs":
+            bfs = BreadthFirstSearch(cm)
 
-        print(f"Path: {path[::-1]}")
-    
-    
-    
-    
-    
-    # for i in range(len(cities)):
-    #     print(f"City: {cities[i]}\nGo Cities With Weights: {go_cities_with_weights[i]}")
+            agent.set_algorithm(bfs)
+            agent.set_goal_city(goal)
+            agent.set_start_city(initial)
 
-    # print(type(node_list))
+            bfs_final_node = agent.search()
 
-    # bfs = UniformCostSearch(cm)
+            agent.get_results([bfs_final_node], "bfs")
 
-    # expanded = bfs.best_first_search("paris", "nice", city_to_weights_map)
+        elif algo == "idls":
+            idls = IterativeDepthLimitedSearch(cm)
 
-    # current_node = expanded
-    # print(f"\n------------------------------------------------------------------------------------------------------------------\n")
-    # while current_node != None:
-    #     print(f"Current Node State: {current_node.get_state()}")
-    #     if current_node.get_parent() == None:
-    #         print("Current Node Parent: None")
-    #         break
-    #     else:
-    #         current_node = current_node.get_parent()
+            agent.set_algorithm(idls)
+            agent.set_goal_city(goal)
+            agent.set_start_city(initial)
 
-    
-    # for i in visiting:
-    #     bfs = BreadthFirstSearch(cm)
+            idls_final_node = agent.search()
 
-    #     final_node = bfs.search(i[0], i[1])
+            agent.get_results([idls_final_node], "idls")
 
-    #     current_node = final_node
+        elif algo == "ucs":
+            ucs = UniformCostSearch(country_map=cm,
+                                    city_to_weight_map=city_to_weights_map)
 
-    #     while True:
-    #         print(f"Current Node State: {current_node.get_state()}")
-    #         if current_node.get_parent() == None:
-    #             print("Current Node Parent: None")
-    #             break
-    #         #print(f"Current Node Parent: {current_node.get_parent().get_state()}")
-    #         if current_node.get_parent() == None:
-    #             break
-    #         current_node = current_node.get_parent()
+            agent.set_algorithm(ucs)
+            agent.set_goal_city(goal)
+            agent.set_start_city(initial)
 
-    # for i in visiting:
-    #     dls = IterativeDepthLimitedSearch(cm)
-    #     print(f"\n------------------------------------------------------------------------------------------------------------------\n")
-    #     print(f"\nStarting: {i[0]}\nEnding: {i[1]}\n")
-    #     final_node = dls.iterative_depth_limited_search(i[0], i[1], 10)
-    #     current_node = final_node
+            ucs_final_node = ucs.uniform_cost_search(initial, goal)
 
-    #     while True:
-    #         print(f"Current Node State: {current_node.get_state()}")
-    #         if current_node.get_parent() == None:
-    #             print("Current Node Parent: None")
-    #             break
-    #         #print(f"Current Node Parent: {current_node.get_parent().get_state()}")
-    #         if current_node.get_parent() == None:
-    #             break
-    #         current_node = current_node.get_parent()
+            agent.get_results([ucs_final_node], "ucs")
 
-    
-
+        elif algo == "astar":
+            astar_e = AStarEuclideanSearch(country_map=cm,
+                                  city_to_weight_map=city_to_weights_map,
+                                  city_to_coords=city_to_coordinates_map)
             
+            agent.set_algorithm(astar_e)
+            agent.set_goal_city(goal)
+            agent.set_start_city(initial)
+            
+            astar_e_final_node = agent.search()
 
-    # bfs = BreadthFirstSearch(cm)
+            agent.get_results([astar_e_final_node], "astar_e")
 
-    # final_node = bfs.search("nice", "brest")
+            astar_h = AStarHaversineSearch(country_map=cm,
+                                           city_to_weight_map=city_to_weights_map,
+                                           city_to_coords=city_to_coordinates_map)
+            
+            agent.set_algorithm(astar_h)
+            agent.set_goal_city(goal)
+            agent.set_start_city(initial)
 
-    # current_node = final_node
+            astar_e_final_node = agent.search()
 
-    # # while current_node.get_parent() != None:
-    # #     print(current_node.get_city_name())
-    # #     current_node = current_node.get_parent()
+            agent.get_results([astar_e_final_node], "astar_h")
 
-    # while True:
-    #     print(f"Current Node State: {current_node.get_state()}")
-    #     if current_node.get_parent() == None:
-    #         print("Current Node Parent: None")
-    #         break
-    #     print(f"Current Node Parent: {current_node.get_parent().get_state()}")
-    #     if current_node.get_parent() == None:
-    #         break
-    #     current_node = current_node.get_parent()
-
-    # print(f"\n\n------------------------------------------------------------------------------------------------------------------\n\n")
-
-    # dls = DepthLimitedSearch(cm)
-
-    # final_node = dls.depth_limited_search("strasbourg", "toulouse", 4)
-    # current_node = final_node
-
-    
-    # # graph = cm.get_graph()
-    # print(f"Final Node: {final_node.get_state()}")
-
-    # while True:
-    #     print(f"Current Node State: {current_node.get_state()}")
-    #     if current_node.get_parent() == None:
-    #         print("Current Node Parent: None")
-    #         break
-    #     print(f"Current Node Parent: {current_node.get_parent().get_state()}")
-    #     if current_node.get_parent() == None:
-    #         break
-    #     current_node = current_node.get_parent()
-    # print(f"\n\n------------------------------------------------------------------------------------------------------------------\n\n")
-    # idls = IterativeDepthLimitedSearch(cm)
-    # final_node = idls.iterative_depth_limited_search("dijon", "rennes", 50)
-    # current_node = final_node
-
-    # while True:
-    #     print(f"Current Node State: {current_node.get_state()}")
-    #     if current_node.get_parent() == None:
-    #         print("Current Node Parent: None")
-    #         break
-    #     print(f"Current Node Parent: {current_node.get_parent().get_state()}")
-    #     if current_node.get_parent() == None:
-    #         break
-    #     current_node = current_node.get_parent()
-    # # agent = MapAgent("caen", SimpleQueue())
-
-    # # print(f"Agent's Current City: {agent.get_current_city()}")
-
-    # # grenoble = agent.move_cities("paris", cm)
-
-    # # print(f"Print agent.get_current_city() :{agent.get_current_city()}")
-
-    # # print(f"agent get reached: {agent.get_reached()}")
-    # # front = agent.get_frontier()
-    # # print(f"Get Frontier: {front}")
-
-    # # temp = []
-
-    # # while not front.empty():
-    # #     temp.append(front.get())
-    # # print(f"we here-----------------------------------\n\n")
-    # # for i in temp:
-    # #     print(i)
-    '''
+        else:
+            print("Invalid algorithm.")
+            return
 
 if __name__ == "__main__":
     main()
