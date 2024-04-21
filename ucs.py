@@ -10,15 +10,15 @@ class UniformCostSearch:
     def expand(self, current_node, city_to_weight_map):
 
         nodes = []
-        print(f"Current Node: {current_node.get_state()}")
-        print(f"Neighbors: {city_to_weight_map[current_node.get_state()]}")
+        # print(f"Current Node: {current_node.get_state()}")
+        # print(f"Neighbors: {city_to_weight_map[current_node.get_state()]}")
         state = current_node.get_state()
         neighbors = city_to_weight_map[state]
 
         for neighbor in neighbors:
-            print(f"Neighbor: {neighbor}")
-            print(f"Neighbor[0]: {neighbor[0]}")
-            print(f"Neighbor[1]: {neighbor[1]}")
+            # print(f"Neighbor: {neighbor}")
+            # print(f"Neighbor[0]: {neighbor[0]}")
+            # print(f"Neighbor[1]: {neighbor[1]}")
             s_prime = neighbor[0]
 
             cost = int(neighbor[1]) + current_node.get_path_cost()
@@ -44,7 +44,7 @@ class UniformCostSearch:
 
             # node = frontier.pop()
             node = self.frontier.get()
-            print(f"Node: {node}")
+
             # If problem is goal state then return node
             if node.get_state() == goal:
                 return node
