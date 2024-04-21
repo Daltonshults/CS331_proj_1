@@ -3,12 +3,19 @@ class CountryMap:
         self.graph = {}
         self.cities = cities
 
-    def create_graph(self):
-        for city in self.cities:
-            self.graph[city.city_name] = {}
+        if cities != None:
+            for city in self.cities:
+                self.graph[city.city_name] = {}
 
-            for go_city in city.go_cities_with_weights:
-                self.graph[city.city_name][go_city[0]] = go_city[1]
+                for go_city in city.go_cities_with_weights:
+                    self.graph[city.city_name][go_city[0]] = go_city[1]
+
+    # def create_graph(self):
+    #     for city in self.cities:
+    #         self.graph[city.city_name] = {}
+
+    #         for go_city in city.go_cities_with_weights:
+    #             self.graph[city.city_name][go_city[0]] = go_city[1]
 
     def get_graph(self):
         return self.graph
