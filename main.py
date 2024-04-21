@@ -12,7 +12,7 @@ class ArgParser:
     def arg_parsing():
         parser = argparse.ArgumentParser(description="Process a map file.")
 
-        parser.add_argument('-algorithm',
+        parser.add_argument('algorithm',
                             type=str,
                             help="The algorithm to use.",
                             default="bsf",
@@ -28,7 +28,7 @@ class ArgParser:
                             help="The B argument.",
                             nargs="?")
         
-        parser.add_argument('-file',
+        parser.add_argument('file',
                             type=str,
                             help="The file to process.",
                             default="./france.txt",
@@ -38,21 +38,22 @@ class ArgParser:
 
         return args
 
-def get_city_to_weights_map(node_list):
-    city_to_weights_map = {}
+class MapGenerator:
+    def get_city_to_weights_map(self, node_list):
+        city_to_weights_map = {}
 
-    for i in node_list:
-        city_to_weights_map[i.get_city_name()] = i.get_go_cities_with_weights()
+        for i in node_list:
+            city_to_weights_map[i.get_city_name()] = i.get_go_cities_with_weights()
 
-    return city_to_weights_map
+        return city_to_weights_map
 
-def get_city_to_coordinates_map(node_list):
-    city_to_coordinates_map = {}
+    def get_city_to_coordinates_map(self, node_list):
+        city_to_coordinates_map = {}
 
-    for i in node_list:
-        city_to_coordinates_map[i.get_city_name()] = i.get_coordinates()
+        for i in node_list:
+            city_to_coordinates_map[i.get_city_name()] = i.get_coordinates()
 
-    return city_to_coordinates_map
+        return city_to_coordinates_map
 
 def main():
     args = ArgParser.arg_parsing()
@@ -69,11 +70,88 @@ def main():
             ("nice", "nantes"),
             ("caen", "strasbourg")            
             ]
+        
+        mp = MapParser()
+        cnf = CityFactory()
+        mg = MapGenerator()
+        
+
+        cities, go_cities_with_weights, coordinates = mp.driver(args.file)
+        node_list = cnf.create_city_nodes_from_lists(cities,
+                                                     go_cities_with_weights,
+                                                     coordinates)
+        
+        city_to_weights_map = mg.get_city_to_weights_map(node_list)
+        city_to_coordinates_map = mg.get_city_to_coordinates_map(node_list)
+        
+        cm = CountryMap(node_list)
+
+
+        # Breadth-First Search ---------------------------------------------------------------------
+        bfs_final_nodes = []
+        for cities in visiting:
+            bfs = BreadthFirstSearch(cm)
+            bfs_final_node = bfs.search(cities[0], cities[1])
+            bfs_final_nodes.append(bfs_final_node)
+
+
+        # Iterative Deepening Depth-Limited Search -----------------------------------------------
+        idls_final_nodes = []
+        for cities in visiting:
+            idls = IterativeDepthLimitedSearch(cm)
+            idls_final_node = idls.iterative_depth_limited_search(cities[0], cities[1], 50)
+            idls_final_nodes.append(idls_final_node)
+
+
+        # Uniform-Cost Search ---------------------------------------------------------------------
+        ucs_final_nodes = []
+        for cities in visiting:
+            ucs = UniformCostSearch(cm)
+            ucs_final_node = ucs.uniform_cost_search(cities[0], cities[1], city_to_weights_map)
+            ucs_final_nodes.append(ucs_final_node)
+
+        # A-Star Euclidean Search ---------------------------------------------------------------------------
+        astar_e_final_nodes = []
+        for cities in visiting:
+            astar_e = AStarSearch(cm)
+            astar_e_final_node = astar_e.astar_search_euclidean(cities[0], cities[1], city_to_weights_map, city_to_coordinates_map)
+            astar_e_final_nodes.append(astar_e_final_node)
+
+        # A-Star Haversine Search ---------------------------------------------------------------------------
+        astar_h_final_nodes = []
+        for cities in visiting:
+            astar_h = AStarSearch(cm)
+            astar_h_final_node = astar_h.astar_search_haversine(cities[0], cities[1], city_to_weights_map, city_to_coordinates_map)
+            astar_h_final_nodes.append(astar_h_final_node)
+
+        print(f"Length of astar_h_final_nodes: {len(astar_h_final_nodes)}")
+        list_of_paths = [[] for _ in range(len(visiting))]
+        for search in range(len(astar_h_final_nodes)):
+            
+            current_node = astar_h_final_nodes[search]
+
+            while current_node != None:
+                list_of_paths[search].append(current_node)
+                current_node = current_node.get_parent()
+
+        copy_list_of_paths = list_of_paths[0].copy()
+
+        copy_list_of_paths.reverse()        
+        for i in copy_list_of_paths:
+            print(i.get_state())
+
+
+
+
+
     else:
         visiting = [(args.A, args.B)]
 
+    
+
     print(f"Visiting: {visiting}")
     print(f"Args Algo: {args.algorithm}")
+    '''
     mp = MapParser()
 
     cities, go_cities_with_weights, coordinates = mp.driver(args.file)
@@ -81,12 +159,12 @@ def main():
     cnf = CityFactory()
     node_list = cnf.create_city_nodes_from_lists(cities, go_cities_with_weights, coordinates)
     cm = CountryMap(node_list)
-
-    city_to_weights_map = get_city_to_weights_map(node_list)
+    mg = MapGenerator()
+    city_to_weights_map = mg.get_city_to_weights_map(node_list)
 
     print(f"City to Weights Map: {city_to_weights_map}")
 
-    city_to_coordinates_map = get_city_to_coordinates_map(node_list)
+    city_to_coordinates_map = mg.get_city_to_coordinates_map(node_list)
 
     print(f"City to Coordinates Map: {city_to_coordinates_map}")
     for i in visiting:
@@ -99,14 +177,18 @@ def main():
         current_node = last_node
         path = []
         while current_node !=None:
-            #print(f"Current Node State: {current_node.get_state()}\nCurrent Node Path Cost: {current_node.get_path_cost()}\nF-score: {current_node.get_f_score()}\n")
+        
             path.append(current_node.get_state())
-            #if current_node.get_parent() == None:
-                #print("Current Node Parent: None")
+
 
             current_node = current_node.get_parent()
 
         print(f"Path: {path[::-1]}")
+    
+    
+    
+    
+    
     # for i in range(len(cities)):
     #     print(f"City: {cities[i]}\nGo Cities With Weights: {go_cities_with_weights[i]}")
 
@@ -238,6 +320,7 @@ def main():
     # # print(f"we here-----------------------------------\n\n")
     # # for i in temp:
     # #     print(i)
+    '''
 
 if __name__ == "__main__":
     main()
