@@ -73,4 +73,61 @@ class EuclideanDistance(DistanceChecker):
     
     def distance(self, point_1, point_2):
         return self.euclidean(point_1, point_2)
-    
+
+
+hdc = HaversineDistance()
+track_distances = []
+goal = [(48, 23, 0, "N"), (5, 29, 0, "W")]
+# nice -> Mars
+nice = [(43, 43, 12, "N"), (7, 15, 59, "E")]
+mars = [(42, 17, 47, "N"), (5, 22, 12, "E")]
+value = hdc.distance(nice, goal)
+track_distances.append(value)
+print(value)
+
+# Mars -> Avig
+mars = [(42, 17, 47, "N"), (5, 22, 12, "E")]
+avig = [(42, 57, 0, "N"), (4, 49, 0, "E")]  
+value = hdc.distance(mars, goal)      
+track_distances.append(value)
+print(value)
+
+# Avig -> Mont
+avig = [(42, 57, 0, "N"), (4, 49, 0, "E")]
+mont = [(42, 36, 43, "N"), (3, 52, 38, "E")]
+value = hdc.distance(avig, goal)      
+track_distances.append(value)
+print(value)
+
+
+# Mont -? Tol
+mont = [(42, 36, 43, "N"), (3, 52, 38, "E")]
+tol = [(43, 35, 16, "N"), (1, 26, 38, "E")]
+value = hdc.distance(mont, goal)      
+track_distances.append(value)
+print(value)
+
+
+# Tol -> Bord
+tol = [(43, 35, 16, "N"), (1, 26, 38, "E")]
+bord = [(43, 35, 14, "N"), (5, 8, 7, "W")]
+value = hdc.distance(tol, goal)      
+track_distances.append(value)
+print(value)
+
+
+# bord -> nantes
+bord = [(43, 35, 14, "N"), (5, 8, 7, "W")]
+nantes = [(47, 50, 5, "N"), (1, 33, 10, "W")]
+value = hdc.distance(bord, goal)      
+track_distances.append(value)
+print(value)
+# nantes -> rennes
+nantes = [(47, 50, 5, "N"), (1, 33, 10, "W")]
+rennes = [(47, 6, 53, "N"), (1, 40, 46, "W")]
+print(hdc.distance(nantes, goal))
+
+# rennes -> brest
+rennes = [(47, 6, 53, "N"), (1, 40, 46, "W")]
+brest = [(48, 23, 0, "N"), (5, 29, 0, "W")]
+print(hdc.distance(rennes, goal))
