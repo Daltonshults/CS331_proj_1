@@ -1,12 +1,14 @@
 from node import CityNode
 from queue import LifoQueue
+from search_metrics import SearchMetrics
 
 class DepthLimitedSearch:
 
-    def __init__(self, country_map):
+    def __init__(self, country_map, search_metrics):
         self.frontier = LifoQueue()
         self.reached = []
         self.map = country_map
+        self.search_metrics = search_metrics
 
     def depth(self, node):
         '''
@@ -36,6 +38,7 @@ class DepthLimitedSearch:
                             path_cost=0)
             
             nieghbor_nodes.append(node)
+            self.search_metrics.increment_expanded()
 
         return nieghbor_nodes
     
@@ -68,6 +71,7 @@ class DepthLimitedSearch:
 
             # Node = frontier.pop()
             node, path = self.pop_node_path()
+            self.search_metrics.increment_explored()
 
             # if node is the goal return the node
             if node.get_state() == goal:
@@ -86,20 +90,25 @@ class DepthLimitedSearch:
                     # Add child to frontier
                     child.set_action("On Frontier")
                     self.frontier.put(child)
+                    self.search_metrics.increment_maintained()
 
         return result
 
 class IterativeDepthLimitedSearch:
     
     def __init__(self, country_map, depth_limited_search=None):
+        self.search_metrics = SearchMetrics()
         if depth_limited_search is None:
-            self.dls = DepthLimitedSearch(country_map)
+            self.dls = DepthLimitedSearch(country_map=country_map,
+                                          search_metrics=self.search_metrics)
         else:
             self.dls = depth_limited_search
 
     def iterative_depth_limited_search(self, initial, goal, max_depth):
         for depth in range(0, max_depth+1):
-            result = self.dls.depth_limited_search(initial, goal, depth)
+            result = self.dls.depth_limited_search(initial=initial,
+                                                   goal=goal, 
+                                                   max_depth=depth)
 
         if result != "cutoff" and result != None:
             return result

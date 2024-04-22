@@ -1,6 +1,7 @@
 from node import CityNodeAStar
 from queue import PriorityQueue
 from distance_checker import EuclideanDistance, HaversineDistance
+from search_metrics import SearchMetrics
 
 class AStarSearch:
     def __init__(self, country_map, city_to_weight_map, city_to_coords):
@@ -9,6 +10,7 @@ class AStarSearch:
         self.map = country_map
         self.city_to_weight_map = city_to_weight_map
         self.city_to_coords = city_to_coords
+        self.search_metrics = SearchMetrics()
 
 
     def expand(self, current_node, goal, heuristic):
@@ -33,6 +35,7 @@ class AStarSearch:
                                      h_score=h_score,
                                      f_score=f_score)
             nodes.append(new_node)
+            self.search_metrics.increment_expanded()
 
         return nodes
 
@@ -54,6 +57,7 @@ class AStarSearch:
         while not self.frontier.empty():
 
             node = self.frontier.get()
+            self.search_metrics.increment_explored()
 
             if node.get_state() == goal:
                 return node
@@ -65,6 +69,7 @@ class AStarSearch:
                     child.set_action("On Frontier")
                     self.reached[s] = child
                     self.frontier.put(child)
+                    self.search_metrics.increment_maintained()
 
         return None
     

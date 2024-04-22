@@ -1,4 +1,4 @@
-CS331
+ CS331
 
 Spring 2024
 
@@ -39,16 +39,8 @@ module)
 4. A* search (astar)
 
 
-The main function of your code should allow for the type of search to be passed as a parameter
-from the command line (the name of each option is in parentheses above), and the default value
-should be bfs. The main function should also take as an argument the start and end cities (-A and
--B respectively). Your main function should also take as a required argument the name of a file
-that defines the map. You will be loading in the data needed to create your map from a file
-called france.txt. Each line contains a city and its coordinates, followed by edges that connect
-that city to another, and the distance from the first city to the second. You can assume that any
-map file that your agent is tested on will be of the same structure as the france.txt file.
-In your main function, if no initial and goal city parameters (-A and -B) are passed in, you should
-compute the path between following initial and goal cities, using all search methods:
+The main function of your code should allow for the type of search to be passed as a parameter from the command line (the name of each option is in parentheses above), and the default value should be bfs. The main function should also take as an argument the start and end cities (-A and -B respectively). Your main function should also take as a required argument the name of a file that defines the map. You will be loading in the data needed to create your map from a file called france.txt. Each line contains a city and its coordinates, followed by edges that connect
+that city to another, and the distance from the first city to the second. You can assume that any map file that your agent is tested on will be of the same structure as the france.txt file. In your main function, if no initial and goal city parameters (-A and -B) are passed in, you should compute the path between following initial and goal cities, using all search methods:
 1. Brest -> Nice
 2. Montpellier -> Calais
 3. Strasbourg -> Bordeaux
@@ -60,30 +52,23 @@ compute the path between following initial and goal cities, using all search met
 9. Caen -> Strasbourg
 
 
-For any initial and goal city, the agent should compute the solution (the path, as a list of cities),
-the cost of the path, and:
+For any initial and goal city, the agent should compute the solution (the path, as a list of cities), the cost of the path, and:
 1. The number of nodes explored, entered, or visited (i.e., the number of nodes removed
 from the frontier)
 2. The number of nodes expanded (i.e., the total number of successors)
 3. The number of nodes maintained (i.e., stored in the frontier)
-For the nine city pairs defined above, your main function should write the path, the cost, and the
-other three metrics above to a plain text file called solutions.txt, and you should include
-that file in your submission.
+For the nine city pairs defined above, your main function should write the path, the cost, and the other three metrics above to a plain text file called solutions.txt, and you should include that file in your submission.
 
 
 For each search method over the nine city pairs, your main function should compute the
 following:
-1. The average number of nodes explored or entered (i.e., the number of nodes removed
-from the frontier)
+1. The average number of nodes explored or entered (i.e., the number of nodes removed from the frontier)
 2. The average number of nodes expanded (i.e., the total number of successors)
 3. The average number of nodes maintained (i.e., stored in the frontier)
-4. The number of times it found the optimal solution (optimal here is measured as “found
-the best solution out of the four search algorithms)
+4. The number of times it found the optimal solution (optimal here is measured as “found the best solution out of the four search algorithms)
 
 
-Write these averages to a plain text file named README. Write a paragraph comparing the
-search algorithms in terms of these metrics. What are the pros and cons of each algorithm?
-Include this file in your submission.
+Write these averages to a plain text file named README. Write a paragraph comparing the search algorithms in terms of these metrics. What are the pros and cons of each algorithm? Include this file in your submission.
 
 
 Deliverables:
@@ -96,7 +81,7 @@ https://classroom.github.com/a/JQF7KaHD
 3. Python code (multiple files)
 4. france.txt file
 
-
+# Need to add a way of getting the cost from the algorithms that don't require a cost
 
 
 

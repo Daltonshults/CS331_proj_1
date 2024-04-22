@@ -1,5 +1,7 @@
 from queue import PriorityQueue
 from node import CityNode
+from search_metrics import SearchMetrics
+
 class UniformCostSearch:
 
     def __init__(self, country_map, city_to_weight_map):
@@ -7,6 +9,10 @@ class UniformCostSearch:
         self.reached = {}
         self.map = country_map
         self.city_to_weight_map = city_to_weight_map
+        self.search_metrics = SearchMetrics()
+
+    def get_search_metrics(self):
+        return self.search_metrics
 
     def expand(self, current_node, city_to_weight_map):
 
@@ -23,10 +29,12 @@ class UniformCostSearch:
 
             new_node = CityNode(state=s_prime,
                                 parent = current_node,
-                                action="Explored",
+                                action="Reached",
                                 path_cost=cost)
+
             
             nodes.append(new_node)
+            self.search_metrics.increment_expanded()
 
         return nodes
 
@@ -37,7 +45,8 @@ class UniformCostSearch:
                         parent = None,
                         action = "Initial",
                         path_cost = 0)
-
+        
+        
         # Put node in priority queue
         self.frontier.put(node)
 
@@ -49,6 +58,9 @@ class UniformCostSearch:
 
             # node = frontier.pop()
             node = self.frontier.get()
+
+            # Increment the explored
+            self.search_metrics.increment_explored()
 
             # If problem is goal state then return node
             if node.get_state() == goal:
@@ -62,14 +74,19 @@ class UniformCostSearch:
 
                 # if s is not in reached or child.PATH-COST < reached[s].PATH-COST then
                 if s not in self.reached or child.get_path_cost() < self.reached[s].get_path_cost():
-                    child.set_action("On Frontier")
+                    child.set_action("Explored")
                     # reached[s] = child
                     self.reached[s] = child
                     # add child to frontier
                     self.frontier.put(child)
+                    self.search_metrics.increment_maintained()
+
                     
         # return failure
         return None
     
     def search(self, initial, goal):
         return self.uniform_cost_search(initial, goal)
+    
+    def get_explored_count(self):
+        return self.explored_cnt

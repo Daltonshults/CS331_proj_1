@@ -1,11 +1,16 @@
 from node import CityNode
 from queue import Queue  as q
+from search_metrics import SearchMetrics
 
 class BreadthFirstSearch:
     def __init__(self, country_map) -> None:
         self.frontier = q()
         self.reached = []
         self.map = country_map
+        self.search_metrics = SearchMetrics()
+
+    def get_search_metrics(self):
+        return self.search_metrics
 
     def expand(self, current_node):
         '''
@@ -21,6 +26,7 @@ class BreadthFirstSearch:
                             path_cost=0)
             
             nieghbor_nodes.append(node)
+            self.search_metrics.increment_expanded()
 
         return nieghbor_nodes
 
@@ -34,7 +40,7 @@ class BreadthFirstSearch:
                         parent= None,
                         action="Initial",
                         path_cost=0)
-
+        
         #If the node is the goal node return node]
         if node.get_state() == goal:
             return node
@@ -50,6 +56,7 @@ class BreadthFirstSearch:
             
             # Node = frontier.pop()
             node = self.frontier.get()
+            self.search_metrics.increment_explored()
 
             # For each child of the node    
             for child in self.expand(node):                
@@ -63,5 +70,6 @@ class BreadthFirstSearch:
                     child.set_action("On Frontier")
                     self.reached.append(child.get_state())
                     self.frontier.put(child)
+                    self.search_metrics.increment_maintained()
 
         return None
