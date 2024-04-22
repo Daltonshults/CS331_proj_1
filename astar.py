@@ -73,6 +73,9 @@ class AStarSearch:
 
         return None
     
+    def get_search_metrics(self):
+        return self.search_metrics
+    
     def astar_search_haversine(self, initial, goal):
         return self.astar_search(initial, goal, HaversineDistance().distance)
     

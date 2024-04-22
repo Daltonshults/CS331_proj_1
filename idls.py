@@ -31,17 +31,18 @@ class DepthLimitedSearch:
         '''
         neighbors = self.map.get_neighbors(current_node.get_state())
         nieghbor_nodes = []
-        for i in neighbors.keys():
-            node = CityNode(state=i,
-                            parent=current_node,
-                            action="Explored",
-                            path_cost=0)
-            
-            nieghbor_nodes.append(node)
-            self.search_metrics.increment_expanded()
+        if neighbors is not None:
+            for i in neighbors.keys():
+                node = CityNode(state=i,
+                                parent=current_node,
+                                action="Expanded",
+                                path_cost=int(current_node.get_path_cost()) + int(neighbors[i]))
+                
+                nieghbor_nodes.append(node)
+                self.search_metrics.increment_expanded()
 
-        return nieghbor_nodes
-    
+            return nieghbor_nodes
+        
     def pop_node_path(self):
         node = self.frontier.get()
         path = set()
@@ -71,6 +72,7 @@ class DepthLimitedSearch:
 
             # Node = frontier.pop()
             node, path = self.pop_node_path()
+            node.set_action("Explored")
             self.search_metrics.increment_explored()
 
             # if node is the goal return the node
@@ -85,14 +87,18 @@ class DepthLimitedSearch:
             elif node.get_state() not in path:
 
                 # for each child of the node expand()
-                for child in self.expand(node):
-                    
-                    # Add child to frontier
-                    child.set_action("On Frontier")
-                    self.frontier.put(child)
-                    self.search_metrics.increment_maintained()
+                children = self.expand(node)
+                if children is not None:
+                    for child in children:
+                        
+                        # Add child to frontier
+                        child.set_action("Maintained")
+                        self.frontier.put(child)
+                        self.search_metrics.increment_maintained()
 
         return result
+    
+
 
 class IterativeDepthLimitedSearch:
     
@@ -120,3 +126,15 @@ class IterativeDepthLimitedSearch:
     
     def search(self, initial, goal):
         return self.iterative_depth_limited_search(initial, goal, 500)
+    
+    def get_expanded(self):
+        return self.search_metrics.get_expanded()
+    
+    def get_explored(self):
+        return self.search_metrics.get_explored()
+    
+    def get_maintained(self):
+        return self.search_metrics.get_maintained()
+    
+    def get_search_metrics(self):
+        return self.search_metrics

@@ -3,7 +3,7 @@ from city_factory import CityFactory
 from map import CountryMap
 import argparse
 from bfs import BreadthFirstSearch
-from dls import IterativeDepthLimitedSearch
+from idls import IterativeDepthLimitedSearch
 from ucs import UniformCostSearch
 from astar import AStarEuclideanSearch, AStarHaversineSearch
 from agent import Agent
@@ -94,8 +94,12 @@ def main():
         cm = CountryMap(node_list)
         agent = Agent(None, None, None, cm, AgentActions)
 
+
         # Breadth-First Search ---------------------------------------------------------------------
         bfs_final_nodes = []
+        bfs_average_explored = []
+        bfs_average_maintained = []
+        bfs_average_expanded = []
         for cities in visiting:
             bfs = BreadthFirstSearch(cm)
 
@@ -104,8 +108,17 @@ def main():
             agent.set_start_city(cities[0])
 
 
+
             bfs_final_node = agent.search()
+
             bfs_final_nodes.append(bfs_final_node)
+
+            cost = bfs_final_node.get_path_cost()
+
+            agent.get_results(final_node_list = [bfs_final_node],
+                              algo_str= "bfs", 
+                              cost = cost,
+                              search_metrics=bfs.get_search_metrics())
 
 
         # Iterative Deepening Depth-Limited Search -----------------------------------------------
@@ -119,6 +132,14 @@ def main():
 
             idls_final_node = agent.search()
             idls_final_nodes.append(idls_final_node)
+            
+            cost = idls_final_node.get_path_cost()
+
+            agent.get_results(final_node_list = [idls_final_node],
+                              algo_str= "idls",
+                              cost= cost,
+                              search_metrics=idls.get_search_metrics())
+
 
 
         # Uniform-Cost Search ---------------------------------------------------------------------
@@ -133,6 +154,15 @@ def main():
             
             ucs_final_node = ucs.uniform_cost_search(cities[0], cities[1])
             ucs_final_nodes.append(ucs_final_node)
+
+            cost = ucs_final_node.get_path_cost()
+
+            agent.get_results(final_node_list = [ucs_final_node],
+                              algo_str= "ucs",
+                              cost= cost,
+                              search_metrics=ucs.get_search_metrics())
+
+
 
         # A-Star Euclidean Search ---------------------------------------------------------------------------
         astar_e_final_nodes = []
@@ -149,6 +179,13 @@ def main():
             astar_e_final_node = agent.search()
             astar_e_final_nodes.append(astar_e_final_node)
 
+            cost = astar_e_final_node.get_path_cost()
+
+            agent.get_results(final_node_list=[astar_e_final_node],
+                              algo_str="astar_e",
+                              cost=cost,
+                              search_metrics=astar_e.get_search_metrics())
+
         # A-Star Haversine Search ---------------------------------------------------------------------------
         astar_h_final_nodes = []
         for cities in visiting:
@@ -160,35 +197,35 @@ def main():
             agent.set_goal_city(cities[1])
             agent.set_start_city(cities[0])
             
-            astar_h_final_node = agent.search()#astar_h.astar_search_haversine(cities[0], cities[1])
+            astar_h_final_node = agent.search()
             astar_h_final_nodes.append(astar_h_final_node)
 
-        # Beginning of results
+        # # Beginning of results
         
-        # BFS
-        LinePrinter.print_line()
-        print("bfs")
-        agent.get_results(bfs_final_nodes, "bfs")
+        # # BFS
+        # LinePrinter.print_line()
+        # print("bfs")
+        # agent.get_results(bfs_final_nodes, "bfs")
 
-        # IDLS
-        LinePrinter.print_line()
-        print("idls")
-        agent.get_results(idls_final_nodes, "idls")
+        # # IDLS
+        # LinePrinter.print_line()
+        # print("idls")
+        # agent.get_results(idls_final_nodes, "idls")
 
-        # UCS
-        LinePrinter.print_line()
-        print("ucs")
-        agent.get_results(ucs_final_nodes, "ucs")
+        # # UCS
+        # LinePrinter.print_line()
+        # print("ucs")
+        # agent.get_results(ucs_final_nodes, "ucs")
 
-        # A* Euclidean
-        LinePrinter.print_line()
-        print("astar_e")
-        agent.get_results(astar_e_final_nodes, "astar_e")
+        # # A* Euclidean
+        # LinePrinter.print_line()
+        # print("astar_e")
+        # agent.get_results(astar_e_final_nodes, "astar_e")
 
-        # A* Haversine
-        LinePrinter.print_line()
-        print("astar_h")
-        agent.get_results(astar_h_final_nodes, "astar_h")
+        # # A* Haversine
+        # LinePrinter.print_line()
+        # print("astar_h")
+        # agent.get_results(astar_h_final_nodes, "astar_h")
     
     else:
         visiting = [(args.A, args.B)]
@@ -224,10 +261,13 @@ def main():
             agent.set_start_city(initial)
 
             bfs_final_node = agent.search()
+            if bfs_final_node == None:
+                print("No path found.")
+                return
+            else:
+                agent.get_results([bfs_final_node], "bfs", bfs_final_node.get_path_cost(), bfs.get_search_metrics())
 
-            agent.get_results([bfs_final_node], "bfs")
-
-        elif algo == "idls":
+        elif algo == "dls":
             idls = IterativeDepthLimitedSearch(cm)
 
             agent.set_algorithm(idls)
@@ -235,8 +275,11 @@ def main():
             agent.set_start_city(initial)
 
             idls_final_node = agent.search()
-
-            agent.get_results([idls_final_node], "idls")
+            if idls_final_node == None:
+                print("No path found.")
+                return
+            else:
+                agent.get_results([idls_final_node], "idls")
 
         elif algo == "ucs":
             ucs = UniformCostSearch(country_map=cm,
@@ -247,8 +290,11 @@ def main():
             agent.set_start_city(initial)
 
             ucs_final_node = ucs.uniform_cost_search(initial, goal)
-
-            agent.get_results([ucs_final_node], "ucs")
+            if ucs_final_node == None:
+                print("No path found.")
+                return
+            else:
+                agent.get_results([ucs_final_node], "ucs", ucs_final_node.get_path_cost(), ucs.get_search_metrics())
 
         elif algo == "astar":
             astar_e = AStarEuclideanSearch(country_map=cm,
@@ -260,8 +306,11 @@ def main():
             agent.set_start_city(initial)
             
             astar_e_final_node = agent.search()
-
-            agent.get_results([astar_e_final_node], "astar_e")
+            if astar_e_final_node == None:
+                print("No path found.")
+                return
+            else:
+                agent.get_results([astar_e_final_node], "astar_e", astar_e_final_node.get_path_cost(), astar_e.get_search_metrics())    
 
             astar_h = AStarHaversineSearch(country_map=cm,
                                            city_to_weight_map=city_to_weights_map,
@@ -271,9 +320,16 @@ def main():
             agent.set_goal_city(goal)
             agent.set_start_city(initial)
 
-            astar_e_final_node = agent.search()
+            astar_h_final_node = agent.search()
 
-            agent.get_results([astar_e_final_node], "astar_h")
+            if astar_h_final_node == None:
+                print("No path found.")
+                return
+            else:
+                agent.get_results([astar_h_final_node],
+                                  "astar_h",
+                                  astar_h_final_node.get_path_cost(),
+                                  astar_h.get_search_metrics())
 
         else:
             print("Invalid algorithm.")

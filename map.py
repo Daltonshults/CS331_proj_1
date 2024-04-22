@@ -28,7 +28,10 @@ class CountryMap:
         return self.cities
         
     def get_neighbors(self, city_name):
-        return self.graph[city_name]
+        if city_name in self.graph.keys():
+            return self.graph[city_name]
+        else:
+            return None
     
     def strip_va(self, city_name):
         '''

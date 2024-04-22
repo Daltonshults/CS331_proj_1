@@ -29,11 +29,17 @@ class Agent:
 
         return path
     
-    def print_path_to_solutions(self, path, algo_str):
+    def print_path_to_solutions(self, path, algo_str, search_metrics, cost):
         print("\n---------------------------------------------\n")
         with open('solutions.txt', 'a') as f:
             f.write("\n---------------------------------------------\n")
             f.write(f"Algorithm: {algo_str}\n")
+            f.write(f"Start City: {self.get_start_city()}\n")
+            f.write(f"Goal City: {self.get_goal_city()}\n")
+            f.write(f"Path Cost: {cost}\n")
+            f.write(f"Explored: {search_metrics.get_explored()}\n")
+            f.write(f"Expanded: {search_metrics.get_expanded()}\n")
+            f.write(f"Maintained: {search_metrics.get_maintained()}\n")
             for i in path:
                 f.write(f"Actions: {i.get_action()}\n")
 
@@ -46,12 +52,12 @@ class Agent:
 
         return cost
     
-    def get_results(self, final_node_list, algo_str):
+    def get_results(self, final_node_list, algo_str, cost, search_metrics):
         for final_node in final_node_list:
             path = self.construct_path(final_node)
             path = self.travel_path(path)
 
-            self.print_path_to_solutions(path, algo_str)
+            self.print_path_to_solutions(path, algo_str, search_metrics, cost)
 
 
     
