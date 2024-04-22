@@ -43,6 +43,18 @@ class Agent:
             for i in path:
                 f.write(f"Actions: {i.get_action()}\n")
 
+    def print_info_to_terminal(self, path, algo_str, search_metrics, cost):
+        print("\n---------------------------------------------\n")
+        print(f"Algorithm: {algo_str}")
+        print(f"Start City: {self.get_start_city()}")
+        print(f"Goal City: {self.get_goal_city()}")
+        print(f"Path Cost: {cost}")
+        print(f"Explored: {search_metrics.get_explored()}")
+        print(f"Expanded: {search_metrics.get_expanded()}")
+        print(f"Maintained: {search_metrics.get_maintained()}")
+        for i in path:
+            print(f"Actions: {i.get_action()}")
+
             
     
     def get_path_cost(self, path):
@@ -58,6 +70,13 @@ class Agent:
             path = self.travel_path(path)
 
             self.print_path_to_solutions(path, algo_str, search_metrics, cost)
+
+    def print_results(self, final_node_list, algo_str, cost, search_metrics):
+        for final_node in final_node_list:
+            path = self.construct_path(final_node)
+            path = self.travel_path(path)
+
+            self.print_info_to_terminal(path, algo_str, search_metrics, cost)
 
 
     

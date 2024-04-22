@@ -200,32 +200,6 @@ def main():
             astar_h_final_node = agent.search()
             astar_h_final_nodes.append(astar_h_final_node)
 
-        # # Beginning of results
-        
-        # # BFS
-        # LinePrinter.print_line()
-        # print("bfs")
-        # agent.get_results(bfs_final_nodes, "bfs")
-
-        # # IDLS
-        # LinePrinter.print_line()
-        # print("idls")
-        # agent.get_results(idls_final_nodes, "idls")
-
-        # # UCS
-        # LinePrinter.print_line()
-        # print("ucs")
-        # agent.get_results(ucs_final_nodes, "ucs")
-
-        # # A* Euclidean
-        # LinePrinter.print_line()
-        # print("astar_e")
-        # agent.get_results(astar_e_final_nodes, "astar_e")
-
-        # # A* Haversine
-        # LinePrinter.print_line()
-        # print("astar_h")
-        # agent.get_results(astar_h_final_nodes, "astar_h")
     
     else:
         visiting = [(args.A, args.B)]
@@ -265,7 +239,7 @@ def main():
                 print("No path found.")
                 return
             else:
-                agent.get_results([bfs_final_node], "bfs", bfs_final_node.get_path_cost(), bfs.get_search_metrics())
+                agent.print_results([bfs_final_node], "bfs", bfs_final_node.get_path_cost(), bfs.get_search_metrics())
 
         elif algo == "dls":
             idls = IterativeDepthLimitedSearch(cm)
@@ -279,7 +253,7 @@ def main():
                 print("No path found.")
                 return
             else:
-                agent.get_results([idls_final_node], "idls")
+                agent.print_results([idls_final_node], "idls", idls_final_node.get_path_cost(), idls.get_search_metrics())
 
         elif algo == "ucs":
             ucs = UniformCostSearch(country_map=cm,
@@ -294,7 +268,7 @@ def main():
                 print("No path found.")
                 return
             else:
-                agent.get_results([ucs_final_node], "ucs", ucs_final_node.get_path_cost(), ucs.get_search_metrics())
+                agent.print_results([ucs_final_node], "ucs", ucs_final_node.get_path_cost(), ucs.get_search_metrics())
 
         elif algo == "astar":
             astar_e = AStarEuclideanSearch(country_map=cm,
@@ -310,7 +284,7 @@ def main():
                 print("No path found.")
                 return
             else:
-                agent.get_results([astar_e_final_node], "astar_e", astar_e_final_node.get_path_cost(), astar_e.get_search_metrics())    
+                agent.print_results([astar_e_final_node], "astar_e", astar_e_final_node.get_path_cost(), astar_e.get_search_metrics())    
 
             astar_h = AStarHaversineSearch(country_map=cm,
                                            city_to_weight_map=city_to_weights_map,
@@ -326,7 +300,7 @@ def main():
                 print("No path found.")
                 return
             else:
-                agent.get_results([astar_h_final_node],
+                agent.print_results([astar_h_final_node],
                                   "astar_h",
                                   astar_h_final_node.get_path_cost(),
                                   astar_h.get_search_metrics())
