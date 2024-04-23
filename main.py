@@ -314,6 +314,8 @@ def main():
                 f.write("\n------------------------------------------------------------------------------------------------------------------\n")
                 for i in counts.keys():
                     f.write(f"{i} was optimal {counts[i]} times.\n")
+
+        
     
     else:
         visiting = [(args.A, args.B)]
