@@ -100,6 +100,7 @@ def main():
         bfs_average_explored = []
         bfs_average_maintained = []
         bfs_average_expanded = []
+        bfs_costs = []
         for cities in visiting:
             bfs = BreadthFirstSearch(cm)
 
@@ -119,10 +120,20 @@ def main():
                               algo_str= "bfs", 
                               cost = cost,
                               search_metrics=bfs.get_search_metrics())
+            
+            bfs_average_explored.append(bfs.get_explored())
+            bfs_average_maintained.append(bfs.get_maintained())
+            bfs_average_expanded.append(bfs.get_expanded())
+            bfs_costs.append(cost)
 
 
         # Iterative Deepening Depth-Limited Search -----------------------------------------------
         idls_final_nodes = []
+        idls_average_explored = []
+        idls_average_maintained = []
+        idls_average_expanded = []
+        idls_costs = []
+
         for cities in visiting:
             idls = IterativeDepthLimitedSearch(cm)
             
@@ -139,11 +150,22 @@ def main():
                               algo_str= "idls",
                               cost= cost,
                               search_metrics=idls.get_search_metrics())
+            
+            idls_average_explored.append(idls.get_explored())
+            idls_average_maintained.append(idls.get_maintained())
+            idls_average_expanded.append(idls.get_expanded())
+            idls_costs.append(cost)
+
 
 
 
         # Uniform-Cost Search ---------------------------------------------------------------------
         ucs_final_nodes = []
+        ucs_average_explored = []
+        ucs_average_maintained = []
+        ucs_average_expanded = []
+        ucs_cost = []
+
         for cities in visiting:
             ucs = UniformCostSearch(country_map=cm,
                                     city_to_weight_map=city_to_weights_map)
@@ -161,11 +183,21 @@ def main():
                               algo_str= "ucs",
                               cost= cost,
                               search_metrics=ucs.get_search_metrics())
+            
+            ucs_average_explored.append(ucs.get_explored())
+            ucs_average_maintained.append(ucs.get_maintained())
+            ucs_average_expanded.append(ucs.get_expanded())
+            ucs_cost.append(cost)
 
 
 
         # A-Star Euclidean Search ---------------------------------------------------------------------------
         astar_e_final_nodes = []
+        astar_e_average_explored = []
+        astar_e_average_maintained = []
+        astar_e_average_expanded = []
+        astar_e_costs = []
+
         for cities in visiting:
             astar_e = AStarEuclideanSearch(country_map=cm,
                                   city_to_weight_map=city_to_weights_map,
@@ -185,9 +217,20 @@ def main():
                               algo_str="astar_e",
                               cost=cost,
                               search_metrics=astar_e.get_search_metrics())
+            
+            astar_e_average_explored.append(astar_e.get_explored())
+            astar_e_average_maintained.append(astar_e.get_maintained())
+            astar_e_average_expanded.append(astar_e.get_expanded())
+            astar_e_costs.append(cost)
+
 
         # A-Star Haversine Search ---------------------------------------------------------------------------
         astar_h_final_nodes = []
+        astar_h_average_explored = []
+        astar_h_average_maintained = []
+        astar_h_average_expanded = []
+        astar_h_costs = []
+
         for cities in visiting:
             astar_h = AStarHaversineSearch(country_map=cm,
                                   city_to_weight_map=city_to_weights_map,
@@ -196,10 +239,81 @@ def main():
             agent.set_algorithm(astar_h)
             agent.set_goal_city(cities[1])
             agent.set_start_city(cities[0])
+
+  
             
             astar_h_final_node = agent.search()
             astar_h_final_nodes.append(astar_h_final_node)
 
+            cost = astar_h_final_node.get_path_cost()
+            
+
+            agent.get_results(final_node_list=[astar_h_final_node],
+                              algo_str="astar_h",
+                              cost=cost,
+                              search_metrics=astar_h.get_search_metrics())
+            
+            astar_h_average_explored.append(astar_h.get_explored())
+            astar_h_average_maintained.append(astar_h.get_maintained())
+            astar_h_average_expanded.append(astar_h.get_expanded())
+            astar_h_costs.append(cost)
+
+        with open('solutions.txt', 'a') as f:
+            f.write("\n------------------------------------------------------------------------------------------------------------------\n")
+            f.write(f"AVERAGE BFS EXPLORED: {sum(bfs_average_explored) / len(bfs_average_explored)}\n")
+            f.write(f"AVERAGE BFS MAINTAINED: {sum(bfs_average_maintained) / len(bfs_average_maintained)}\n")
+            f.write(f"AVERAGE BFS EXPANDED: {sum(bfs_average_expanded) / len(bfs_average_expanded)}\n")
+            f.write("\n------------------------------------------------------------------------------------------------------------------\n")
+            f.write(f"AVERAGE IDLS EXPLORED: {sum(idls_average_explored) / len(idls_average_explored)}\n")
+            f.write(f"AVERAGE IDLS MAINTAINED: {sum(idls_average_maintained) / len(idls_average_maintained)}\n")
+            f.write(f"AVERAGE IDLS EXPANDED: {sum(idls_average_expanded) / len(idls_average_expanded)}\n")
+            f.write("\n------------------------------------------------------------------------------------------------------------------\n")
+            f.write(f"AVERAGE UCS EXPLORED: {sum(ucs_average_explored) / len(ucs_average_explored)}\n")
+            f.write(f"AVERAGE UCS MAINTAINED: {sum(ucs_average_maintained) / len(ucs_average_maintained)}\n")
+            f.write(f"AVERAGE UCS EXPANDED: {sum(ucs_average_expanded) / len(ucs_average_expanded)}\n")
+            f.write("\n------------------------------------------------------------------------------------------------------------------\n")
+            f.write(f"AVERAGE ASTAR-E EXPLORED: {sum(astar_e_average_explored) / len(astar_e_average_explored)}\n")
+            f.write(f"AVERAGE ASTAR-E MAINTAINED: {sum(astar_e_average_maintained) / len(astar_e_average_maintained)}\n")
+            f.write(f"AVERAGE ASTAR-E EXPANDED: {sum(astar_e_average_expanded) / len(astar_e_average_expanded)}\n")
+            f.write("\n------------------------------------------------------------------------------------------------------------------\n")
+            f.write(f"AVERAGE ASTAR-H EXPLORED: {sum(astar_h_average_explored) / len(astar_h_average_explored)}\n")
+            f.write(f"AVERAGE ASTAR-H MAINTAINED: {sum(astar_h_average_maintained) / len(astar_h_average_maintained)}\n")
+            f.write(f"AVERAGE ASTAR-H EXPANDED: {sum(astar_h_average_expanded) / len(astar_h_average_expanded)}\n")
+            f.write("\n------------------------------------------------------------------------------------------------------------------\n")
+
+            counts = {
+                "bfs": 0,
+                "idls": 0,
+                "ucs": 0,
+                "astar_e": 0,
+                "astar_h": 0
+            }
+
+            for i in range(len(astar_h_costs)):
+                with open('solutions.txt', 'a') as f:
+                    f.write(f"\n\n\n\nastar_h: {astar_h_costs[i]}\n")
+                    f.write(f"astar_e: {astar_e_costs[i]}\n")
+                    f.write(f"bfs: {bfs_costs[i]}\n")
+                    f.write(f"idls: {idls_costs[i]}\n")
+                    f.write(f"ucs: {ucs_cost[i]}\n")
+
+                if astar_h_costs[i] <= bfs_costs[i] and astar_h_costs[i] <= idls_costs[i] and astar_h_costs[i] <= ucs_cost[i] and astar_h_costs[i] <= astar_e_costs[i]:
+                    counts["astar_h"] += 1
+                if astar_e_costs[i] <= bfs_costs[i] and astar_e_costs[i] <= idls_costs[i] and astar_e_costs[i] <= ucs_cost[i] and astar_e_costs[i] <= astar_h_costs[i]:
+                    counts["astar_e"] += 1
+                if bfs_costs[i] <= idls_costs[i] and bfs_costs[i] <= ucs_cost[i] and bfs_costs[i] <= astar_h_costs[i] and bfs_costs[i] <= astar_e_costs[i]:
+                    counts["bfs"] += 1
+                if idls_costs[i] <= ucs_cost[i] and idls_costs[i] <= astar_h_costs[i] and idls_costs[i] <= astar_e_costs[i] and idls_costs[i] <= bfs_costs[i]:
+                    counts["idls"] += 1
+                elif ucs_cost[i] <= astar_h_costs[i] and ucs_cost[i] <= astar_e_costs[i] and ucs_cost[i] <= bfs_costs[i] and ucs_cost[i] <= idls_costs[i]:
+                    counts["ucs"] += 1
+                else:
+                    print("No winner.")
+
+            with open('solutions.txt', 'a') as f:
+                f.write("\n------------------------------------------------------------------------------------------------------------------\n")
+                for i in counts.keys():
+                    f.write(f"{i} was optimal {counts[i]} times.\n")
     
     else:
         visiting = [(args.A, args.B)]

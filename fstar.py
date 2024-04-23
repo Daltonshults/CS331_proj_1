@@ -1,15 +1,18 @@
 from queue import PriorityQueue
-from node import CityNode
+from node import CityNodeAStar
 from search_metrics import SearchMetrics
 
-class UniformCostSearch:
+class AstarFuck:
 
-    def __init__(self, country_map, city_to_weight_map):
+    def __init__(self, country_map, city_to_weight_map, city_to_coords, heuristic, goal):
         self.frontier = PriorityQueue()
         self.reached = {}
         self.map = country_map
         self.city_to_weight_map = city_to_weight_map
         self.search_metrics = SearchMetrics()
+        self.city_to_coords = city_to_coords
+        self.heuristic = heuristic
+        self.goal = goal
 
     def get_search_metrics(self):
         return self.search_metrics
@@ -27,10 +30,16 @@ class UniformCostSearch:
 
             cost = int(neighbor[1]) + current_node.get_path_cost()
 
-            new_node = CityNode(state=s_prime,
+            h_score = self.heuristic(point_1= self.city_to_coords[neighbor[0]], point_2 = self.city_to_coords[self.goal])
+
+            f_score = h_score + cost
+
+            new_node = CityNodeAStar(state=s_prime,
                                 parent = current_node,
-                                action="Reached",
-                                path_cost=cost)
+                                action="Expanded",
+                                path_cost=cost,
+                                h_score=h_score,
+                                f_score=f_score)
 
             
             nodes.append(new_node)
@@ -41,10 +50,15 @@ class UniformCostSearch:
 
     def uniform_cost_search(self, initial, goal):
         # Set initial node
-        node = CityNode(state = initial,
+        initial_h_score = self.heuristic(point_1 = self.city_to_coords[initial],
+                                    point_2 = self.city_to_coords[goal])
+        
+        node = CityNodeAStar(state = initial,
                         parent = None,
                         action = "Initial",
-                        path_cost = 0)
+                        path_cost = 0,
+                        h_score = initial_h_score,
+                        f_score = initial_h_score)
         
         
         # Put node in priority queue

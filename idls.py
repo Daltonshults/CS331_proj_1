@@ -116,12 +116,11 @@ class IterativeDepthLimitedSearch:
                                                    goal=goal, 
                                                    max_depth=depth)
 
-        if result != "cutoff" and result != None:
-            return result
-        elif result == None:
-            return None
-        elif result == "cutoff":
-            return "cutoff"            
+            if result != "cutoff" and result != None:
+                return result
+        if result == "cutoff":
+            return "cutoff"
+        
         return None
     
     def search(self, initial, goal):

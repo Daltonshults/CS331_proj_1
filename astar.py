@@ -66,7 +66,7 @@ class AStarSearch:
                 s = child.get_state()
 
                 if s not in self.reached or child.get_path_cost() < self.reached[s].get_path_cost():
-                    child.set_action("On Frontier")
+                    child.set_action("Explored")
                     self.reached[s] = child
                     self.frontier.put(child)
                     self.search_metrics.increment_maintained()
@@ -84,6 +84,15 @@ class AStarSearch:
     
     def search(self, initial, goal):
         return self.astar_search_haversine(initial, goal)
+    
+    def get_explored(self):
+        return self.search_metrics.get_explored()
+    
+    def get_maintained(self):
+        return self.search_metrics.get_maintained()
+    
+    def get_expanded(self):
+        return self.search_metrics.get_expanded()
     
 class AStarEuclideanSearch(AStarSearch):
     def __init__(self, country_map, city_to_weight_map, city_to_coords):

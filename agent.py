@@ -30,7 +30,6 @@ class Agent:
         return path
     
     def print_path_to_solutions(self, path, algo_str, search_metrics, cost):
-        print("\n---------------------------------------------\n")
         with open('solutions.txt', 'a') as f:
             f.write("\n---------------------------------------------\n")
             f.write(f"Algorithm: {algo_str}\n")
